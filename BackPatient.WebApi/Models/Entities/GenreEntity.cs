@@ -1,4 +1,4 @@
-namespace BackPatient.Models.Entities;
+namespace BackPatient.WebApi.Models.Entities;
 
 /// <summary>
 /// Modèle de données du genre du patient

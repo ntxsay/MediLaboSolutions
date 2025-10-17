@@ -1,7 +1,7 @@
-using BackPatient.Models.Dtos;
-using BackPatient.Models.Entities;
+using BackPatient.WebApi.Models.Dtos;
+using BackPatient.WebApi.Models.Entities;
 
-namespace BackPatient.Utilities;
+namespace BackPatient.WebApi.Utilities;
 
 internal static class Converters
 {

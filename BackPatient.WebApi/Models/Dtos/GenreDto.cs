@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace BackPatient.Models.Dtos;
+namespace BackPatient.WebApi.Models.Dtos;
 
 public class GenreDto
 {

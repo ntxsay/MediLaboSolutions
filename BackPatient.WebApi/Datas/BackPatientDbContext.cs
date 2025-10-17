@@ -1,9 +1,9 @@
-using BackPatient.Models.Entities;
+using BackPatient.WebApi.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackPatient.Datas;
+namespace BackPatient.WebApi.Datas;
 
 public class BackPatientDbContext : IdentityDbContext<IdentityUser>
 {

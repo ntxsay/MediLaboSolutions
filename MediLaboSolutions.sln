@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient", "BackPatient\BackPatient.csproj", "{0918C6F4-979A-48E3-81A4-3840734C431C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient.WebApi", "BackPatient.WebApi\BackPatient.WebApi.csproj", "{0918C6F4-979A-48E3-81A4-3840734C431C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient.Tests", "BackPatient.Tests\BackPatient.Tests.csproj", "{4627B7E1-2BFE-4E14-BD4F-D59C4F106277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,9 @@ Global
 		{0918C6F4-979A-48E3-81A4-3840734C431C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0918C6F4-979A-48E3-81A4-3840734C431C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0918C6F4-979A-48E3-81A4-3840734C431C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4627B7E1-2BFE-4E14-BD4F-D59C4F106277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4627B7E1-2BFE-4E14-BD4F-D59C4F106277}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4627B7E1-2BFE-4E14-BD4F-D59C4F106277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4627B7E1-2BFE-4E14-BD4F-D59C4F106277}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
