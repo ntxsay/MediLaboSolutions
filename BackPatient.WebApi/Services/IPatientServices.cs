@@ -194,10 +194,14 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
 
         try
         {
-            context.Patients.Remove(new PatientEntity()
+            var entity = await context.Patients.FindAsync(id);
+            if (entity == null)
             {
-                Id = id
-            });
+                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                return false;
+            }
+            
+            context.Patients.Remove(entity);
             await context.SaveChangesAsync();
             
             logger.LogInformation($"Le patient n°{id} a été supprimé avec succès");

@@ -210,10 +210,14 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
 
         try
         {
-            context.Genres.Remove(new GenreEntity()
+            var entity = await context.Genres.FindAsync(id);
+            if (entity == null)
             {
-                Id = id
-            });
+                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                return false;
+            }
+            
+            context.Genres.Remove(entity);
             await context.SaveChangesAsync();
             
             logger.LogInformation($"Le genre n°{id} a été supprimé avec succès");

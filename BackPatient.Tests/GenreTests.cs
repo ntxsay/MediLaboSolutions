@@ -106,10 +106,10 @@ public class GenreTests : IDisposable
             return;
         }
 
-        await _genreServices.DeleteAsync(genreDto.Id);
+        var isDeleted = await _genreServices.DeleteAsync(genreDto.Id);
 
         // Assert
-        Assert.False(await _genreServices.ExistsAsync(genreDto.Id));
+        Assert.True(isDeleted);
     }
     
     public void Dispose()
