@@ -9,6 +9,7 @@ public class PatientEntity
     public int GenreId { get; set; }
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
+    public DateTime BirthDate { get; set; }
     public string? PostalAddress { get; set; }
     public string? NoTelephone { get; set; }
     
