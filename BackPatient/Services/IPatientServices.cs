@@ -9,7 +9,9 @@ public interface IPatientServices
 {
     public Task<PatientDto[]> GetAllPatientsAsync();
     public Task<bool> CreateAsync(PatientDto value);
+    public Task<PatientDto?> GetAsync(int id);
     public Task<bool> UpdateAsync(int id, PatientDto value);
+    public Task DeleteAsync(int id);
 }
 
 public class PatientServices(BackPatientDbContext context, ILogger<PatientServices> logger) : IPatientServices
@@ -51,6 +53,28 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
         }  
     }
 
+    public async Task<PatientDto?> GetAsync(int id)
+    {
+        try
+        {
+            var entity = await context.Patients.AsNoTracking()
+                .Include(i => i.Genre)
+                .FirstOrDefaultAsync(i => i.Id == id);
+            if (entity == null)
+            {
+                logger.LogError($"Le patient {id} n'a pas été trouvé");
+                return null;
+            }
+            
+            return entity.ConvertToDto();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Une erreur est survenue lors de la récupération du patient: {ex.Message}");
+            return null;
+        }        
+    }
+
     public async Task<bool> UpdateAsync(int id, PatientDto value)
     {
         try
@@ -79,5 +103,10 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
             logger.LogError($"Une erreur est survenue lors de la mise à jour du patient: {ex.Message}");
             return false;
         }        
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        await context.Patients.Where(w => w.Id == id).ExecuteDeleteAsync();
     }
 }
