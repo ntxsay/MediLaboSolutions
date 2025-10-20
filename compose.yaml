@@ -1,0 +1,51 @@
+﻿# Memos :
+#"PORT_HOTE:PORT_CONTENEUR"
+#Ne pas insérer de virgule à la fin des lignes sous peine d'erreurs
+
+services:
+  #Projet BackPatient
+  backPatientWebapi:
+    image: backpatient.webapi
+    build:
+      context: .
+      dockerfile: BackPatient.WebApi/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbPatient;"
+  
+  
+  # Base de données Postgresql   
+  # Lancer ce service : docker compose up postgresBackPatient --remove-orphans
+  postgresBackPatient:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    ports:
+      - "5432:5432"
+    
+    # Force PostgreSQL à écouter sur toutes les adresses réseau
+    command: [ "postgres", "-c", "listen_addresses=*" ]
+    #Aficher les variables d'environnement reel :  docker compose exec postgresBackPatient env
+    environment:
+      POSTGRES_PASSWORD: P@ssword1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: DbPatient
+      
+  
+  # Interface Adminer Postgres
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+
