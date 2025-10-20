@@ -34,7 +34,7 @@ public class PatientTests : IDisposable
         {
             LastName = "Last name of atient" + new Random().Next(1, 100),
             FirstName = "First name of atient" + new Random().Next(1, 100),
-            BirthDate = DateTime.Now,
+            BirthDate = DateOnly.FromDateTime(DateTime.Now),
             PostalAddress = "Postal address of atient" + new Random().Next(1, 100),
             NoTelephone = "No telephone of atient" + new Random().Next(1, 100),
             GenreId = 0,

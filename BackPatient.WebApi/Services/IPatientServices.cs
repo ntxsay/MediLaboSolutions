@@ -9,7 +9,7 @@ namespace BackPatient.WebApi.Services;
 public interface IPatientServices
 {
     public Task<PatientDto[]> GetAllPatientsAsync();
-    public Task<bool> ExistsAsync(string firstName, string lastName, DateTime birthDate);
+    public Task<bool> ExistsAsync(string firstName, string lastName, DateOnly birthDate);
     public Task<bool> ExistsAsync(int id);
     public Task<bool> CreateAsync(PatientDto value);
     public Task<bool> CreateAsync(PatientDto[] values);
@@ -24,9 +24,11 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
     {
         try
         {
-            var datas = await context.Patients.AsNoTracking().Select(s => s.ConvertToDto()).
-                OrderBy(o => o.LastName)
+            var datas = await context.Patients.AsNoTracking()
+                .Include(i => i.Genre)
+                .OrderBy(o => o.LastName)
                 .ThenBy(o => o.FirstName)
+                .Select(s => s.ConvertToDto())
                 .ToArrayAsync();
             return datas;
         }
@@ -37,7 +39,7 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
         }
     }
     
-    public async Task<bool> ExistsAsync(string firstName, string lastName, DateTime birthDate)
+    public async Task<bool> ExistsAsync(string firstName, string lastName, DateOnly birthDate)
     {
         if (string.IsNullOrEmpty(firstName) || string.IsNullOrWhiteSpace(firstName))
         {
@@ -142,7 +144,7 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
-                logger.LogError($"Le patient {id} n'a pas été trouvé");
+                logger.LogWarning($"Le patient {id} n'a pas été trouvé");
                 return null;
             }
             
@@ -162,7 +164,7 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
             var entity = await context.Patients.FindAsync(id);
             if (entity == null)
             {
-                logger.LogError($"Le patient {id} n'a pas été trouvé");
+                logger.LogWarning($"Le patient {id} n'a pas été trouvé");
                 return false;
             }
             
@@ -197,7 +199,7 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
             var entity = await context.Patients.FindAsync(id);
             if (entity == null)
             {
-                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
                 return false;
             }
             

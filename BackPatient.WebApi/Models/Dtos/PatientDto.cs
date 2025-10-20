@@ -17,7 +17,7 @@ public class PatientDto
     public string LastName { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "La date de naissance est obligatoire")]
-    public DateTime BirthDate { get; set; }
+    public DateOnly BirthDate { get; set; }
     public string? PostalAddress { get; set; }
     public string? NoTelephone { get; set; }
     

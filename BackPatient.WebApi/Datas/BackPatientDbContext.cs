@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackPatient.WebApi.Datas;
 
-public class BackPatientDbContext : IdentityDbContext<IdentityUser>
+public class BackPatientDbContext : DbContext//IdentityDbContext<IdentityUser>
 {
     public DbSet<GenreEntity> Genres { get; set; }
     public DbSet<PatientEntity> Patients { get; set; }
@@ -76,12 +76,10 @@ public class BackPatientDbContext : IdentityDbContext<IdentityUser>
             .HasMaxLength(100);
         
         modelBuilder.Entity<PatientEntity>()
-            .Property(p => p.GenreId)
-            .IsRequired();
-        
-        modelBuilder.Entity<PatientEntity>()
             .HasOne(p => p.Genre)
             .WithMany(g => g.Patients)
-            .HasForeignKey(p => p.GenreId);
+            .HasForeignKey(p => p.GenreId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

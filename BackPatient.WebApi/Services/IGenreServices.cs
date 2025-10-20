@@ -25,8 +25,9 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
     {
         try
         {
-            var datas = await context.Genres.AsNoTracking().Select(s => s.ConvertToDto()).
-                OrderBy(o => o.Name)
+            var datas = await context.Genres.AsNoTracking()
+                .OrderBy(o => o.Name)
+                .Select(s => s.ConvertToDto())
                 .ToArrayAsync();
             return datas;
         }
@@ -135,7 +136,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
-                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
                 return null;
             }
             
@@ -162,7 +163,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
                 .FirstOrDefaultAsync(i => i.Name == name);
             if (entity == null)
             {
-                logger.LogError($"Le genre {name} n'a pas été trouvé");
+                logger.LogWarning($"Le genre {name} n'a pas été trouvé");
                 return null;
             }
             
@@ -182,7 +183,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             var entity = await context.Genres.FindAsync(id);
             if (entity == null)
             {
-                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
                 return false;
             }
             
@@ -213,7 +214,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             var entity = await context.Genres.FindAsync(id);
             if (entity == null)
             {
-                logger.LogError($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
                 return false;
             }
             
