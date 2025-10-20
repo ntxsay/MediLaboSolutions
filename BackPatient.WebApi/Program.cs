@@ -3,6 +3,7 @@ using BackPatient.WebApi.Datas;
 using BackPatient.WebApi.Datas.Seeders;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuthorization();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "MediLabo Solutions Back Patient API",
+        Description = "Cette API permet de gerer les informations des patients",
+        
+    });
+});
 
 builder.Services.AddDbContext<BackPatientDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -24,8 +37,15 @@ if (app.Environment.IsDevelopment())
 {
     await PatientSeeder.SeedPatientsAsync(app);
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
