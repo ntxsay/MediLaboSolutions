@@ -36,7 +36,7 @@ internal static class Converters
             PostalAddress = patient.PostalAddress,
             NoTelephone = patient.NoTelephone,
             GenreId = patient.GenreId,
-            Genre = patient.Genre.ConvertToDto()
+            Genre = patient.Genre?.ConvertToDto()
         };
     }
     
@@ -51,7 +51,7 @@ internal static class Converters
             PostalAddress = dto.PostalAddress,
             NoTelephone = dto.NoTelephone,
             GenreId = dto.GenreId,
-            Genre = dto.Genre.ConvertToEntity()
+            Genre = dto.Genre?.ConvertToEntity()
         };
     }
 }
