@@ -11,10 +11,17 @@ services:
       dockerfile: BackPatient.WebApi/Dockerfile
     ports:
       - "8081:8081"
+      - "8082:8082"
     environment:
+      ASPNETCORE_URLS: https://0.0.0.0:8081;http://0.0.0.0:8082
+      # dotnet dev-certs https --clean
+      # dotnet dev-certs https --export-path ./aspnetapp.pfx --password "P@ssword1234" ou dotnet dev-certs https --trust
+      ASPNETCORE_Kestrel__Certificates__Default__Password: P@ssword1234
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbPatient;"
-  
+    volumes:
+      - ./BackPatient.WebApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
   # Base de données Postgresql   
   # Lancer ce service : docker compose up postgresBackPatient --remove-orphans
