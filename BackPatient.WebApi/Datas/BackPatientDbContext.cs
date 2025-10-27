@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackPatient.WebApi.Datas;
 
-public class BackPatientDbContext : DbContext//IdentityDbContext<IdentityUser>
+public class BackPatientDbContext : IdentityDbContext<IdentityUser>
 {
     public DbSet<GenreEntity> Genres { get; set; }
     public DbSet<PatientEntity> Patients { get; set; }

@@ -3,6 +3,7 @@
 #Ne pas insérer de virgule à la fin des lignes sous peine d'erreurs
 
 services:
+  
   #Projet BackPatient
   backPatientWebapi:
     image: backpatient.webapi
@@ -28,17 +29,8 @@ services:
   postgresBackPatient:
     image: postgres
     restart: always
-    # set shared memory limit when using docker compose
-    shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
     ports:
       - "5432:5432"
-    
     # Force PostgreSQL à écouter sur toutes les adresses réseau
     command: [ "postgres", "-c", "listen_addresses=*" ]
     #Aficher les variables d'environnement reel :  docker compose exec postgresBackPatient env
@@ -46,7 +38,8 @@ services:
       POSTGRES_PASSWORD: P@ssword1234
       POSTGRES_USER: postgres
       POSTGRES_DB: DbPatient
-      
+    volumes:
+      - pgdata:/var/lib/postgresql
   
   # Interface Adminer Postgres
   adminer:
@@ -55,4 +48,6 @@ services:
     ports:
       - "8080:8080"
 
-
+#Definir les volumes 
+volumes:
+  pgdata:

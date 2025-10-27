@@ -47,7 +47,7 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
         return Ok(patient);
     }
     
-    [HttpPut("Update")]
+    [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientDto value)
     {
         if (!ModelState.IsValid)
