@@ -1,5 +1,5 @@
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Models.Entities;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Utilities;
 

@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model FrontPatient.AspNetCore.Models.Dtos.PatientDto[]
+
+<section >
+    
+    <h2>Liste des patients</h2>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Genre</th>
+            <th>Date de naissance</th>
+            <th>Adresse</th>
+            <th>Numéro de téléphone</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Id</td>
+                <td>@p.Genre.Name</td>
+                <td>@p.LastName</td>
+                <td>@p.FirstName</td>
+                <td>@p.BirthDate</td>
+                <td>@p.PostalAddress</td>
+                <td>@p.NoTelephone</td>
+                <td><a asp-action="Update" asp-route-id="@p.Id">Editer</a></td>
+            </tr>
+        }
+    </table>
+</section>

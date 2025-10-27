@@ -13,6 +13,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/patient/details/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patient/details/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/patient/get/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -46,6 +58,54 @@
         }
       ],
       "UpstreamPathTemplate": "/api/patient/update/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/genre/all",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/genre/all",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/genre/get/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/genre/get/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/genre/create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/genre/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/genre/update/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/genre/update/{id}",
       "UpstreamHttpMethod": [ "PUT" ]
     }
   ],

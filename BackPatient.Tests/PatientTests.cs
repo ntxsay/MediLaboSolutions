@@ -1,9 +1,9 @@
 using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.Tests;
 
@@ -11,6 +11,7 @@ public class PatientTests : IDisposable
 {
     private readonly BackPatientDbContext _dbContext;
     private readonly IPatientServices _patientServices;
+    private readonly IGenreServices _genreServices;
     
     public PatientTests()
     {
@@ -20,7 +21,9 @@ public class PatientTests : IDisposable
             .Options;
 
         _dbContext = new BackPatientDbContext(options);
-        _patientServices = new PatientServices(_dbContext, 
+        _genreServices = new GenreServices(_dbContext, 
+            new LoggerFactory().CreateLogger<GenreServices>());
+        _patientServices = new PatientServices(_dbContext, _genreServices, 
             new LoggerFactory().CreateLogger<PatientServices>());
         
         _dbContext.Database.EnsureCreated();

@@ -1,10 +1,10 @@
 using BackPatient.WebApi.Datas;
 using BackPatient.WebApi.Utilities;
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Controllers;
 
@@ -36,6 +36,15 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
 
         var list = await patientServices.GetAllPatientsAsync();
         return Ok(list);
+    }
+    
+    [HttpGet("Details/{id}")]
+    public async Task<IActionResult> DetailsPatientAsync(int id)
+    {
+        var patient = await patientServices.DetailsAsync(id);
+        if (patient == null)
+            return NotFound();
+        return Ok(patient);
     }
     
     [HttpGet("Get/{id}")]

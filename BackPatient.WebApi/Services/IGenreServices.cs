@@ -1,14 +1,14 @@
 using BackPatient.WebApi.Utilities;
 using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Services;
 
 public interface IGenreServices
 {
-    public Task<GenreDto[]> GetAllPatientsAsync();
+    public Task<GenreDto[]> GetAllAsync();
     public Task<bool> ExistsAsync(string name);
     public Task<bool> ExistsAsync(int id);
     public Task<bool> CreateAsync(GenreDto value);
@@ -21,7 +21,7 @@ public interface IGenreServices
 
 public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> logger) : IGenreServices
 {
-    public async Task<GenreDto[]> GetAllPatientsAsync()
+    public async Task<GenreDto[]> GetAllAsync()
     {
         try
         {

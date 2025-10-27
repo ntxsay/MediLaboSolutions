@@ -1,8 +1,7 @@
 using BackPatient.WebApi.Utilities;
 using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Models.Dtos;
-using BackPatient.WebApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Services;
 
@@ -13,12 +12,13 @@ public interface IPatientServices
     public Task<bool> ExistsAsync(int id);
     public Task<bool> CreateAsync(PatientDto value);
     public Task<bool> CreateAsync(PatientDto[] values);
+    public Task<PatientDto?> DetailsAsync(int id);
     public Task<PatientDto?> GetAsync(int id);
     public Task<bool> UpdateAsync(int id, PatientDto value);
     public Task<bool> DeleteAsync(int id);
 }
 
-public class PatientServices(BackPatientDbContext context, ILogger<PatientServices> logger) : IPatientServices
+public class PatientServices(BackPatientDbContext context, IGenreServices genreServices, ILogger<PatientServices> logger) : IPatientServices
 {
     public async Task<PatientDto[]> GetAllPatientsAsync()
     {
@@ -135,7 +135,7 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
         }  
     }
 
-    public async Task<PatientDto?> GetAsync(int id)
+    public async Task<PatientDto?> DetailsAsync(int id)
     {
         try
         {
@@ -149,6 +149,30 @@ public class PatientServices(BackPatientDbContext context, ILogger<PatientServic
             }
             
             return entity.ConvertToDto();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"Une erreur est survenue lors de la récupération du patient: {ex.Message}");
+            return null;
+        }        
+    }
+    
+    public async Task<PatientDto?> GetAsync(int id)
+    {
+        try
+        {
+            var entity = await context.Patients.AsNoTracking()
+                .Include(i => i.Genre)
+                .FirstOrDefaultAsync(i => i.Id == id);
+            if (entity == null)
+            {
+                logger.LogWarning($"Le patient {id} n'a pas été trouvé");
+                return null;
+            }
+            
+            var dto = entity.ConvertToDto();
+            dto.Genres = await genreServices.GetAllAsync();
+            return dto;
         }
         catch (Exception ex)
         {

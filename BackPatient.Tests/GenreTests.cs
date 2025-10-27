@@ -1,9 +1,9 @@
 ﻿using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.Tests;
 

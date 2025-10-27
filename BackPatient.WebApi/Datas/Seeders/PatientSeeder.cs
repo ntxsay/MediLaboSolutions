@@ -1,6 +1,6 @@
-using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
+using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Datas.Seeders;
 
