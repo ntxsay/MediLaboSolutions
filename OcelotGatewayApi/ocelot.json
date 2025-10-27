@@ -1,0 +1,55 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/patient/all",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patient/all",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/patient/get/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patient/get/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/patient/create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patient/create",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/patient/update/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "UpstreamPathTemplate": "/api/patient/update/{id}",
+      "UpstreamHttpMethod": [ "PUT" ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8084"
+  }
+}

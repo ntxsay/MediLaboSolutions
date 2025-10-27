@@ -111,7 +111,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    await PatientSeeder.SeedPatientsAsync(app);
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
@@ -120,6 +119,8 @@ if (app.Environment.IsDevelopment())
         options.RoutePrefix = string.Empty;
     });
 }
+
+await PatientSeeder.SeedPatientsAsync(app, app.Environment.IsDevelopment());
 
 app.UseCors();
 app.UseHttpsRedirection();
