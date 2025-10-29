@@ -25,6 +25,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/patient/details/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
@@ -69,6 +73,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/patient/update/{id}",
       "UpstreamHttpMethod": [ "PUT" ]
     },
@@ -81,6 +89,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/genre/all",
       "UpstreamHttpMethod": [ "GET" ]
     },
@@ -93,6 +105,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/genre/get/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
@@ -105,6 +121,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/genre/create",
       "UpstreamHttpMethod": [ "POST" ]
     },
@@ -117,6 +137,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/genre/update/{id}",
       "UpstreamHttpMethod": [ "PUT" ]
     }
