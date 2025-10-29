@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using PatientShared.Models.Dtos;
+using GenreDto = FrontPatient.AspNetCore.Models.ViewModels.GenreDto;
 using PatientDto = FrontPatient.AspNetCore.Models.Dtos.PatientDto;
 
 namespace FrontPatient.AspNetCore.Services;

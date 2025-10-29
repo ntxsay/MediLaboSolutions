@@ -1,9 +1,5 @@
-using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Utilities;
 using BackPatient.WebApi.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Controllers;

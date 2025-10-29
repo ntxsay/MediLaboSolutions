@@ -51,57 +51,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-builder.Services.AddAuthorization();
 builder.Services.AddDbContext<BackPatientDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-    {
-        //Sign In settings.
-        options.SignIn.RequireConfirmedEmail = false;
 
-        // Password settings.
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequiredLength = 8;
-        options.Password.RequiredUniqueChars = 1;
-
-        // Lockout settings.
-        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-        options.Lockout.MaxFailedAccessAttempts = 5;
-        options.Lockout.AllowedForNewUsers = true;
-
-        // User settings.
-        options.User.AllowedUserNameCharacters =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-        options.User.RequireUniqueEmail = false;
-    })
-    //.AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<BackPatientDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = true;
-        options.TokenValidationParameters = new TokenValidationParameters()
+        options.Authority = builder.Configuration["JWT:Authority"];
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidAudience = builder.Configuration["JWT:ValidAudience"],
-            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]!))
+            ValidAudience = builder.Configuration["JWT:Audience"]
         };
     });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IGenreServices, GenreServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();

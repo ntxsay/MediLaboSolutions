@@ -9,6 +9,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/patient/all",
       "UpstreamHttpMethod": [ "GET" ]
     },
@@ -33,6 +37,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/patient/get/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
@@ -45,6 +53,10 @@
           "Port": 8082
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UpstreamPathTemplate": "/api/patient/create",
       "UpstreamHttpMethod": [ "POST" ]
     },

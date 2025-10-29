@@ -1,22 +1,50 @@
 using System.Globalization;
 using FrontPatient.AspNetCore.Services;
 using Microsoft.AspNetCore.Localization;
+using FrontPatient.AspNetCore.Handlers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr-FR");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("fr-FR");
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-builder.Services.AddHttpClient("GatewayClient", client =>
-{
-    client.BaseAddress = new Uri("http://ocelotwebapi:8084/api/");
-});
-builder.Services.AddControllersWithViews();
+
+
 builder.Services.AddControllersWithViews()
     .AddDataAnnotationsLocalization()
     .AddViewLocalization();
+builder.Services.AddRazorPages();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Login";
+        options.LogoutPath = "/Login/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Forbidden/";
+    });
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<AuthTokenHandler>();
+builder.Services.AddHttpClient("GatewayClient", client =>
+    {
+        client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/");
+    })
+    .ConfigurePrimaryHttpMessageHandler(() =>
+    {
+        return new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = (msg, cert, chain, errors) => true
+        };
+    }).AddHttpMessageHandler<AuthTokenHandler>();
+
+builder.Services.AddHttpClient("AuthorizedClient", client =>
+{
+    client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/auth/");
+});
+    
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]
@@ -29,6 +57,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedUICultures = supportedCultures;
 });
 
+builder.Services.AddScoped<ILoginServices, LoginServices>();
 builder.Services.AddScoped<IGenreServices, GenreServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
 
@@ -45,10 +74,14 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
+app.MapRazorPages();
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Patient}/{action=Index}/{id?}")

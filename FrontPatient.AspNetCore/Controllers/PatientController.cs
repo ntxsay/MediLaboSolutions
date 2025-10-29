@@ -3,18 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using FrontPatient.AspNetCore.Models;
 using FrontPatient.AspNetCore.Services;
 using FrontPatient.AspNetCore.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FrontPatient.AspNetCore.Controllers;
 
 public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices) : Controller
 {
-    
+    [Authorize]
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var patients = await patientServices.GetAllAsync();
         return View(patients);
     }
     
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Update(int? id)
     {

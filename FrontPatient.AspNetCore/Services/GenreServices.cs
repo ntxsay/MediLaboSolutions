@@ -1,4 +1,5 @@
 ﻿using PatientShared.Models.Dtos;
+using GenreDto = FrontPatient.AspNetCore.Models.ViewModels.GenreDto;
 
 namespace FrontPatient.AspNetCore.Services;
 

@@ -16,12 +16,8 @@ services:
     environment:
       #https://0.0.0.0:8083;
       ASPNETCORE_URLS: http://0.0.0.0:8086
-      # dotnet dev-certs https --clean
-      # dotnet dev-certs https --export-path ./aspnetapp.pfx --password "P@ssword1234" ou dotnet dev-certs https --trust
-      #ASPNETCORE_Kestrel__Certificates__Default__Password: P@ssword1234
-      #ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       ASPNETCORE_ENVIRONMENT: Development
-  
+      
   #Projet Ocelot
   ocelotWebapi:
     image: ocelotgatewayapi
@@ -34,11 +30,8 @@ services:
     environment:
       #https://0.0.0.0:8083;
       ASPNETCORE_URLS: http://0.0.0.0:8084
-      # dotnet dev-certs https --clean
-      # dotnet dev-certs https --export-path ./aspnetapp.pfx --password "P@ssword1234" ou dotnet dev-certs https --trust
-      #ASPNETCORE_Kestrel__Certificates__Default__Password: P@ssword1234
-      #ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbAuth;"
     volumes:
       - ./OcelotGatewayApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
@@ -54,10 +47,6 @@ services:
     environment:
       #https://0.0.0.0:8081;
       ASPNETCORE_URLS: http://0.0.0.0:8082
-      # dotnet dev-certs https --clean
-      # dotnet dev-certs https --export-path ./aspnetapp.pfx --password "P@ssword1234" ou dotnet dev-certs https --trust
-      #ASPNETCORE_Kestrel__Certificates__Default__Password: P@ssword1234
-      #ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbPatient;"
     volumes:
@@ -76,9 +65,10 @@ services:
     environment:
       POSTGRES_PASSWORD: P@ssword1234
       POSTGRES_USER: postgres
-      POSTGRES_DB: DbPatient
+      POSTGRES_DB: postgres
     volumes:
       - pgdata:/var/lib/postgresql
+      - ./db-init:/docker-entrypoint-initdb.d
   
   # Interface Adminer Postgres
   adminer:
