@@ -1,4 +1,4 @@
-﻿namespace PatientShared.Models.Dtos;
+﻿namespace BackPatient.WebApi.Models.Dtos;
 
 public class TokenDto
 {

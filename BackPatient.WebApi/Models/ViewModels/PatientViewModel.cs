@@ -1,10 +1,10 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace PatientShared.Models.Dtos;
+namespace BackPatient.WebApi.Models.ViewModels;
 
-public class PatientDto
+public class PatientViewModel
 {
     [ValidateNever]
     public int Id { get; set; }
@@ -26,7 +26,5 @@ public class PatientDto
     public int GenreId { get; set; }
     
     [ValidateNever]
-    public GenreDto Genre { get; set; } = null!;
-    
-    public GenreDto[] Genres { get; set; } = [];
+    public GenreViewModel Genre { get; set; } = null!;
 }

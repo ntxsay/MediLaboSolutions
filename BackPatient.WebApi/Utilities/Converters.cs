@@ -1,5 +1,6 @@
+using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Models.Entities;
-using PatientShared.Models.Dtos;
+using BackPatient.WebApi.Models.ViewModels;
 
 namespace BackPatient.WebApi.Utilities;
 
@@ -8,6 +9,16 @@ internal static class Converters
     public static GenreDto ConvertToDto(this GenreEntity genre)
     {
         return new GenreDto()
+        {
+            Id = genre.Id,
+            Name = genre.Name,
+            Description = genre.Description
+        };
+    }
+    
+    public static GenreViewModel ConvertToViewModel(this GenreEntity genre)
+    {
+        return new GenreViewModel()
         {
             Id = genre.Id,
             Name = genre.Name,
@@ -25,6 +36,16 @@ internal static class Converters
         };
     }
     
+    public static GenreEntity ConvertToEntity(this GenreViewModel vm)
+    {
+        return new GenreEntity()
+        {
+            Id = vm.Id,
+            Name = vm.Name,
+            Description = vm.Description
+        };
+    }
+    
     public static PatientDto ConvertToDto(this PatientEntity patient)
     {
         return new PatientDto
@@ -36,7 +57,22 @@ internal static class Converters
             PostalAddress = patient.PostalAddress,
             NoTelephone = patient.NoTelephone,
             GenreId = patient.GenreId,
-            Genre = patient.Genre?.ConvertToDto()
+            Genre = patient.Genre?.ConvertToDto()!
+        };
+    }
+    
+    public static PatientViewModel ConvertToViewModel(this PatientEntity patient)
+    {
+        return new PatientViewModel
+        {
+            Id = patient.Id,
+            FirstName = patient.FirstName,
+            LastName = patient.LastName,
+            BirthDate = patient.BirthDate,
+            PostalAddress = patient.PostalAddress,
+            NoTelephone = patient.NoTelephone,
+            GenreId = patient.GenreId,
+            Genre = patient.Genre?.ConvertToViewModel()!
         };
     }
     
@@ -51,7 +87,22 @@ internal static class Converters
             PostalAddress = dto.PostalAddress,
             NoTelephone = dto.NoTelephone,
             GenreId = dto.GenreId,
-            Genre = dto.Genre?.ConvertToEntity()
+            Genre = dto.Genre?.ConvertToEntity()!
+        };
+    }
+    
+    public static PatientEntity ConvertToEntity(this PatientViewModel vm)
+    {
+        return new PatientEntity()
+        {
+            Id = vm.Id,
+            FirstName = vm.FirstName,
+            LastName = vm.LastName,
+            BirthDate = vm.BirthDate,
+            PostalAddress = vm.PostalAddress,
+            NoTelephone = vm.NoTelephone,
+            GenreId = vm.GenreId,
+            Genre = vm.Genre?.ConvertToEntity()!
         };
     }
 }

@@ -8,9 +8,9 @@ public interface IPatientServices
     public Task<PatientViewModel[]> GetAllAsync();
     public Task<PatientViewModel?> DetailAsync(int id);
     public Task<PatientViewModel?> CreateEmptyAsync();
-    public Task<bool> CreateAsync(PatientViewModel value);
+    public Task<PatientViewModel?> CreateAsync(PatientViewModel value);
     public Task<PatientViewModel?> UpdateAsync(int id);
-    public Task<bool> UpdateAsync(int id, PatientViewModel value);
+    public Task<PatientViewModel?> UpdateAsync(int id, PatientViewModel value);
     public Task<bool> DeleteAsync(int id);
 }
 
@@ -22,10 +22,10 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
     {
         try
         {
-            var response = await _client.GetAsync("patient/All");
+            using var response = await _client.GetAsync("patient/All");
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la récupération des patients : {0}", response.ReasonPhrase);
+                logger.LogWarning("Une erreur est survenue lors de la récupération des patients : {response}", response.ReasonPhrase);
                 return [];
             }
             
@@ -49,10 +49,10 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
     {
         try
         {
-            var response = await _client.GetAsync($"patient/Get/{id}");
+            using var response = await _client.GetAsync($"patient/Get/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {0}", response.ReasonPhrase);
+                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {response}", response.ReasonPhrase);
                 return null;      
             }
             
@@ -76,10 +76,10 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
     {
         try
         {
-            var response = await _client.GetAsync("patient/CreateEmpty");
+            using var response = await _client.GetAsync("patient/CreateEmpty");
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {0}", response.ReasonPhrase);
+                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {respnse}", response.ReasonPhrase);
                 return null;
             }
             
@@ -99,30 +99,30 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
         }
     }
     
-    public async Task<bool> CreateAsync(PatientViewModel value)
+    public async Task<PatientViewModel?> CreateAsync(PatientViewModel value)
     {
         try
         {
-            var response = await _client.PostAsJsonAsync("patient/Create", value);
+            using var response = await _client.PostAsJsonAsync("patient/Create", value.ToDto());
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la création du patient : {0}", response.ReasonPhrase);
-                return false;
+                logger.LogWarning("Une erreur est survenue lors de la création du patient : {response}", response.ReasonPhrase);
+                return null;
             }
             
-            var isSuccess = await response.Content.ReadFromJsonAsync<bool>();
-            if (!isSuccess)
+            var data = await response.Content.ReadFromJsonAsync<PatientDto>();
+            if (data == null)
             {
                 logger.LogWarning("Le patient n'a pas été créé.");
-                return false;
+                return null;
             }
 
-            return isSuccess;
+            return data.ToViewModel();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Une erreur est survenue lors de la création du patient");
-            return false;
+            return null;
         }
     }
     
@@ -130,10 +130,10 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
     {
         try
         {
-            var response = await _client.GetAsync($"patient/Get/{id}");
+            using var response = await _client.GetAsync($"patient/Get/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {0}", response.ReasonPhrase);
+                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {response}", response.ReasonPhrase);
                 return null;
             }
             
@@ -153,23 +153,30 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
         }
     }
     
-    public async Task<bool> UpdateAsync(int id, PatientViewModel value)
+    public async Task<PatientViewModel?> UpdateAsync(int id, PatientViewModel value)
     {
         try
         {
-            var response = await _client.PutAsJsonAsync($"patient/Update/{id}", value);
+            using var response = await _client.PutAsJsonAsync($"patient/Update/{id}", value.ToDto());
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la mise à jour du patient : {0}", response.ReasonPhrase);
-                return false;
+                logger.LogWarning("Une erreur est survenue lors de la mise à jour du patient : {response}", response.ReasonPhrase);
+                return null;
             }
             
-            return true;
+            var data = await response.Content.ReadFromJsonAsync<PatientDto>();
+            if (data == null)
+            {
+                logger.LogWarning("Une erreur est survenue lors de la mise à jour du patient");
+                return null;
+            }
+            
+            return data.ToViewModel();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Une erreur est survenue lors de la mise à jour du patient");
-            return false;
+            return null;
         }
     }
     
@@ -177,10 +184,17 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
     {
         try
         {
-            var response = await _client.DeleteAsync($"patient/Delete/{id}");
+            using var response = await _client.DeleteAsync($"patient/Delete/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                logger.LogWarning("Une erreur est survenue lors de la suppression du patient : {0}", response.ReasonPhrase);
+                logger.LogWarning("Une erreur est survenue lors de la suppression du patient : {response}", response.ReasonPhrase);
+                return false;
+            }
+            
+            var data = await response.Content.ReadFromJsonAsync<bool>();
+            if (!data)
+            {
+                logger.LogWarning("Une erreur est survenue lors de la suppression du patient");
                 return false;
             }
             

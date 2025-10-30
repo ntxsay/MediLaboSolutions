@@ -1,6 +1,7 @@
+using BackPatient.WebApi.Models.Dtos;
+using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Datas.Seeders;
 
@@ -16,11 +17,11 @@ public static class PatientSeeder
 
             await appContext.Database.MigrateAsync();
 
-            var genresToAdd = new HashSet<GenreDto>();
-            var femaleGenre = await genreServices.GetAsync("F");
+            var genresToAdd = new HashSet<GenreViewModel>();
+            var femaleGenre = await genreServices.GetViewModelAsync("F");
             if (femaleGenre == null)
             {
-                femaleGenre = new GenreDto
+                femaleGenre = new GenreViewModel
                 {
                     Name = "F",
                     Description = "Représente un patient de sexe féminin."
@@ -28,10 +29,10 @@ public static class PatientSeeder
                 genresToAdd.Add(femaleGenre);
             }
 
-            var maleGenre = await genreServices.GetAsync("M");
+            var maleGenre = await genreServices.GetViewModelAsync("M");
             if (maleGenre == null)
             {
-                maleGenre = new GenreDto
+                maleGenre = new GenreViewModel()
                 {
                     Name = "M",
                     Description = "Représente un patient de sexe masculin."
@@ -45,7 +46,7 @@ public static class PatientSeeder
             if (isDevelopment)
             {
                 var patientServices = scope.ServiceProvider.GetRequiredService<IPatientServices>();
-                var patients = new List<PatientDto>();
+                var patients = new List<PatientViewModel>();
 
                 //Patient 1
                 const string patient1FirstName = "Test";
@@ -69,7 +70,7 @@ public static class PatientSeeder
 
                 if (!await patientServices.ExistsAsync(patient1FirstName, patient1LastName, patient1BirthDate))
                 {
-                    patients.Add(new PatientDto
+                    patients.Add(new PatientViewModel
                     {
                         FirstName = patient1FirstName,
                         LastName = patient1LastName,
@@ -82,7 +83,7 @@ public static class PatientSeeder
 
                 if (!await patientServices.ExistsAsync(patient2FirstName, patient2LastName, patient2BirthDate))
                 {
-                    patients.Add(new PatientDto
+                    patients.Add(new PatientViewModel
                     {
                         FirstName = patient2FirstName,
                         LastName = patient2LastName,
@@ -95,7 +96,7 @@ public static class PatientSeeder
 
                 if (!await patientServices.ExistsAsync(patient3FirstName, patient3LastName, patient3BirthDate))
                 {
-                    patients.Add(new PatientDto
+                    patients.Add(new PatientViewModel
                     {
                         FirstName = patient3FirstName,
                         LastName = patient3LastName,
@@ -108,7 +109,7 @@ public static class PatientSeeder
 
                 if (!await patientServices.ExistsAsync(patient4FirstName, patient4LastName, patient4BirthDate))
                 {
-                    patients.Add(new PatientDto
+                    patients.Add(new PatientViewModel()
                     {
                         FirstName = patient4FirstName,
                         LastName = patient4LastName,

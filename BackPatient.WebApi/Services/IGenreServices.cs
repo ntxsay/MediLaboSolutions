@@ -1,8 +1,8 @@
 using BackPatient.WebApi.Utilities;
 using BackPatient.WebApi.Datas;
-using BackPatient.WebApi.Models.Entities;
+using BackPatient.WebApi.Models.Dtos;
+using BackPatient.WebApi.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Services;
 
@@ -11,11 +11,13 @@ public interface IGenreServices
     public Task<GenreDto[]> GetAllAsync();
     public Task<bool> ExistsAsync(string name);
     public Task<bool> ExistsAsync(int id);
-    public Task<bool> CreateAsync(GenreDto value);
-    public Task<bool> CreateAsync(GenreDto[] values);
+    public Task<GenreDto?> CreateAsync(GenreViewModel value);
+    public Task<GenreDto[]> CreateAsync(GenreViewModel[] values);
     public Task<GenreDto?> GetAsync(int id);
+    public Task<GenreViewModel?> GetViewModelAsync(int id);
     public Task<GenreDto?> GetAsync(string name);
-    public Task<bool> UpdateAsync(int id, GenreDto value);
+    public Task<GenreViewModel?> GetViewModelAsync(string name);
+    public Task<GenreDto?> UpdateAsync(int id, GenreViewModel value);
     public Task<bool> DeleteAsync(int id);
 }
 
@@ -33,7 +35,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la récupération des patients: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération des patients");
             return [];
         }
     }
@@ -52,7 +54,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la vérification de l'existence du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la vérification de l'existence du genre");
             return false;
         }
     }
@@ -65,12 +67,12 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la vérification de l'existence du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la vérification de l'existence du genre");
             return false;
         }
     }
 
-    public async Task<bool> CreateAsync(GenreDto value)
+    public async Task<GenreDto?> CreateAsync(GenreViewModel value)
     {
         try
         {
@@ -80,24 +82,31 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             await context.Genres.AddAsync(entity);
             await context.SaveChangesAsync();
 
-            value.Id = entity.Id;
+            var createdEntity = await context.Genres.AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == entity.Id);
             
-            logger.LogInformation($"Le genre {value.Name} a été créé avec succès");
-            return true;
+            if (createdEntity == null)
+            {
+                logger.LogWarning("Le genre n°{id} a été créé mais n'a pas été retourné", entity.Id);
+                return null;
+            }
+            
+            logger.LogInformation("Le genre {name} a été créé avec succès", createdEntity.Name);
+            return createdEntity.ConvertToDto();
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la création du genre: {ex.Message}");
-            return false;
+            logger.LogError(ex, "Une erreur est survenue lors de la création du genre");
+            return null;
         }  
     }
     
-    public async Task<bool> CreateAsync(GenreDto[] values)
+    public async Task<GenreDto[]> CreateAsync(GenreViewModel[] values)
     {
         if (values.Length == 0)
         {
             logger.LogWarning("Il n'y a pas de genre à ajouter.");
-            return false;
+            return [];
         }
         
         try
@@ -112,22 +121,51 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             await context.Genres.AddRangeAsync(entities);
             await context.SaveChangesAsync();
             
-            foreach (var entity in entities)
+            var createdIds = entities.Select(s => s.Id).ToHashSet();
+            
+            var createdDtos = await context.Genres.AsNoTracking()
+                .OrderBy(o => o.Name)
+                .Where(w => createdIds.Contains(w.Id))
+                .Select(s => s.ConvertToDto())
+                .ToArrayAsync();
+            
+            if (createdDtos.Length == 0)
             {
-                var dto = values.Single(s => string.Equals(s.Name, entity.Name, StringComparison.CurrentCultureIgnoreCase));
-                dto.Id = entity.Id;
+                logger.LogWarning("Les genre ont bien été créés mais n'ont pas pu être retournés.");
+                return [];
             }
             
             logger.LogInformation("Les genre ont été créés avec succès");
-            return true;
+            return createdDtos;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la création des genres: {ex.Message}");
-            return false;
+            logger.LogError(ex, "Une erreur est survenue lors de la création des genres");
+            return [];
         }  
     }
 
+    public async Task<GenreViewModel?> GetViewModelAsync(int id)
+    {
+        try
+        {
+            var entity = await context.Genres.AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == id);
+            if (entity == null)
+            {
+                logger.LogWarning("Le genre {id} n'a pas été trouvé", id);
+                return null;
+            }
+            
+            return entity.ConvertToViewModel();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du genre");
+            return null;
+        }        
+    }
+    
     public async Task<GenreDto?> GetAsync(int id)
     {
         try
@@ -136,7 +174,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
                 .FirstOrDefaultAsync(i => i.Id == id);
             if (entity == null)
             {
-                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning("Le genre {id} n'a pas été trouvé", id);
                 return null;
             }
             
@@ -144,7 +182,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la récupération du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du genre");
             return null;
         }        
     }
@@ -163,7 +201,7 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
                 .FirstOrDefaultAsync(i => i.Name == name);
             if (entity == null)
             {
-                logger.LogWarning($"Le genre {name} n'a pas été trouvé");
+                logger.LogWarning("Le genre {name} n'a pas été trouvé", name);
                 return null;
             }
             
@@ -171,20 +209,47 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la récupération du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du genre");
+            return null;
+        }        
+    }
+    
+    public async Task<GenreViewModel?> GetViewModelAsync(string name)
+    {
+        if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+        {
+            logger.LogWarning("Le nom du genre ne peut pas être null, vide ou ne contenir que des espaces blancs.");
+            return null;
+        }
+        
+        try
+        {
+            var entity = await context.Genres.AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Name == name);
+            if (entity == null)
+            {
+                logger.LogWarning("Le genre {name} n'a pas été trouvé", name);
+                return null;
+            }
+            
+            return entity.ConvertToViewModel();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du genre");
             return null;
         }        
     }
 
-    public async Task<bool> UpdateAsync(int id, GenreDto value)
+    public async Task<GenreDto?> UpdateAsync(int id, GenreViewModel value)
     {
         try
         {
             var entity = await context.Genres.FindAsync(id);
             if (entity == null)
             {
-                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
-                return false;
+                logger.LogWarning("Le genre {id} n'a pas été trouvé", id);
+                return null;
             }
             
             entity.Name = value.Name;
@@ -192,20 +257,20 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             
             await context.SaveChangesAsync();
             
-            logger.LogInformation($"Le genre {value.Name} a été mis à jour avec succès");
-            return true;
+            logger.LogInformation("Le genre {name} a été mis à jour avec succès", entity.Name);
+            return entity.ConvertToDto();
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la mise à jour du genre: {ex.Message}");
-            return false;
+            logger.LogError(ex, "Une erreur est survenue lors de la mise à jour du genre");
+            return null;
         }        
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
         /*
-         Attention : ExecuteDeleteAsync() n'est pas supporté par tous les fournisseurs de base de données Ex:InMemory Database
+         Attention : ExecuteDeleteAsync() n'est pas supporté par tous les fournisseurs de base de données Ex : InMemory Database
         await context.Genres.Where(w => w.Id == id).ExecuteDeleteAsync();
         */
 
@@ -214,19 +279,19 @@ public class GenreServices(BackPatientDbContext context, ILogger<GenreServices> 
             var entity = await context.Genres.FindAsync(id);
             if (entity == null)
             {
-                logger.LogWarning($"Le genre {id} n'a pas été trouvé");
+                logger.LogWarning("Le genre {id} n'a pas été trouvé", id);
                 return false;
             }
             
             context.Genres.Remove(entity);
             await context.SaveChangesAsync();
             
-            logger.LogInformation($"Le genre n°{id} a été supprimé avec succès");
+            logger.LogInformation("Le genre n°{id} a été supprimé avec succès", id);
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la suppression du genre n°{id}: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la suppression du genre n°{id}", id);
             return false;
         }
     }

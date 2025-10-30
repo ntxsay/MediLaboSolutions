@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace PatientShared.Models.Dtos;
+namespace BackPatient.WebApi.Models.ViewModels;
 
-public class GenreDto
+public class GenreViewModel
 {
     [ValidateNever]
     public int Id { get; set; }

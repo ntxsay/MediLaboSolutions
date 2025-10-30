@@ -1,9 +1,9 @@
 using BackPatient.WebApi.Datas;
+using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.Tests;
 
@@ -33,7 +33,7 @@ public class PatientTests : IDisposable
     public async Task CreatePatientAsync()
     {
         // Arrange
-        var patientDto = new PatientDto
+        var patientDto = new PatientViewModel()
         {
             LastName = "Last name of atient" + new Random().Next(1, 100),
             FirstName = "First name of atient" + new Random().Next(1, 100),
@@ -41,7 +41,7 @@ public class PatientTests : IDisposable
             PostalAddress = "Postal address of atient" + new Random().Next(1, 100),
             NoTelephone = "No telephone of atient" + new Random().Next(1, 100),
             GenreId = 0,
-            Genre = new GenreDto()
+            Genre = new GenreViewModel()
             {
                 Name = new Random().Next(1, 4) > 2 ? "M" : "F"
             }
@@ -51,7 +51,7 @@ public class PatientTests : IDisposable
         var result = await _patientServices.CreateAsync(patientDto);
 
         // Assert
-        Assert.True(result);
+        Assert.NotNull(result);
     }
  
     public void Dispose()

@@ -1,7 +1,7 @@
-using System.Text.Json;
+using BackPatient.WebApi.Models.Dtos;
+using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Controllers;
 
@@ -26,7 +26,7 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreatePatientAsync([FromBody] PatientDto value)
+    public async Task<IActionResult> CreatePatientAsync([FromBody] PatientViewModel value)
     {
         if (!ModelState.IsValid)
         {
@@ -34,18 +34,14 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
             return BadRequest();
         }
         
-        var json = JsonSerializer.Serialize(value);
-        logger.LogInformation(json);   
-        
-        var isCreated = await patientServices.CreateAsync(value);
-        if (!isCreated)
+        var data = await patientServices.CreateAsync(value);
+        if (data == null)
         {
             logger.LogError("Le patient n'a pas été créé.");
             return BadRequest();
         }
 
-        var list = await patientServices.GetAllAsync();
-        return Ok(list);
+        return Ok(data);
     }
     
     [HttpGet("Details/{id}")]
@@ -67,7 +63,7 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
     }
     
     [HttpPut("Update/{id}")]
-    public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientDto value)
+    public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientViewModel value)
     {
         if (!ModelState.IsValid)
         {
@@ -75,11 +71,10 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
             return BadRequest();
         }
            
-        var isUpdated = await patientServices.UpdateAsync(id, value);
-        if (!isUpdated)
+        var data = await patientServices.UpdateAsync(id, value);
+        if (data == null)
             return BadRequest();
 
-        var list = await patientServices.GetAllAsync();
-        return Ok(list);
+        return Ok(data);
     }
 }

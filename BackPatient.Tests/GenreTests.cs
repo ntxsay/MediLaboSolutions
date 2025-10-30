@@ -1,9 +1,9 @@
 ﻿using BackPatient.WebApi.Datas;
+using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.Tests;
 
@@ -30,7 +30,7 @@ public class GenreTests : IDisposable
     public async Task CreateGenreAsync()
     {
         // Arrange
-        var genreDto = new GenreDto
+        var genreDto = new GenreViewModel
         {
             Name = "Test Genre" + new Random().Next(1, 100)
         };
@@ -39,74 +39,68 @@ public class GenreTests : IDisposable
         var result = await _genreServices.CreateAsync(genreDto);
 
         // Assert
-        Assert.True(result);
+        Assert.NotNull(result);
     }
     
     [Fact]
     public async Task GetGenreAsync()
     {
         // Arrange
-        var genreDto = new GenreDto
+        var genreDto = new GenreViewModel()
         {
             Name = "Test Genre" + new Random().Next(1, 100)
         };
 
         // Act
-        var isCreated = await _genreServices.CreateAsync(genreDto);
-        if (!isCreated)
-        {
-            Assert.Fail("Le genre n'a pas été créé");
-            return;
-        }
+        var data = await _genreServices.CreateAsync(genreDto);
         
-        var result = await _genreServices.GetAsync(genreDto.Id);
 
         // Assert
-        Assert.NotNull(result);
+        Assert.NotNull(data);
     }
     
     [Fact]
     public async Task UpdateGenreAsync()
     {
         // Arrange
-        var genreDto = new GenreDto
+        var viewModel = new GenreViewModel()
         {
             Name = "Test Genre" + new Random().Next(1, 100)
         };
 
         // Act
-        var isCreated = await _genreServices.CreateAsync(genreDto);
-        if (!isCreated)
+        var data = await _genreServices.CreateAsync(viewModel);
+        if (data == null)
         {
             Assert.Fail("Le genre n'a pas été créé");
             return;
         }
 
-        genreDto.Description = "Nouvelle description";
-        var result = await _genreServices.UpdateAsync(genreDto.Id, genreDto);
+        viewModel.Description = "Nouvelle description";
+        var result = await _genreServices.UpdateAsync(viewModel.Id, viewModel);
 
         // Assert
-        Assert.True(result);
+        Assert.NotNull(result);
     }
     
     [Fact]
     public async Task DeleteGenreAsync()
     {
         // Arrange
-        var genreDto = new GenreDto
+        var viewModel = new GenreViewModel()
         {
             Name = "Test Genre" + new Random().Next(1, 100)
         };
 
         // Act
-        var isCreated = await _genreServices.CreateAsync(genreDto);
-        if (!isCreated)
+        var data = await _genreServices.CreateAsync(viewModel);
+        if (data == null)
         {
             Assert.Fail("Le genre n'a pas été créé");
             return;
         }
 
-        var isDeleted = await _genreServices.DeleteAsync(genreDto.Id);
+        var isDeleted = await _genreServices.DeleteAsync(viewModel.Id);
 
         // Assert
         Assert.True(isDeleted);

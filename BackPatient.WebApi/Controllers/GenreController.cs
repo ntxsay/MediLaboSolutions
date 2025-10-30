@@ -1,6 +1,7 @@
+using BackPatient.WebApi.Models.Dtos;
+using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
-using PatientShared.Models.Dtos;
 
 namespace BackPatient.WebApi.Controllers;
 
@@ -18,7 +19,7 @@ public class GenreController(IGenreServices genreServices, ILogger<GenreControll
     }
 
     [HttpPost("Create")]
-    public async Task<IActionResult> CreateGenreAsync([FromBody] GenreDto value)
+    public async Task<IActionResult> CreateGenreAsync([FromBody] GenreViewModel value)
     {
         if (!ModelState.IsValid)
         {
@@ -26,12 +27,11 @@ public class GenreController(IGenreServices genreServices, ILogger<GenreControll
             return BadRequest();
         }
            
-        var isCreated = await genreServices.CreateAsync(value);
-        if (!isCreated)
+        var data = await genreServices.CreateAsync(value);
+        if (data == null)
             return BadRequest();
 
-        var list = await genreServices.GetAllAsync();
-        return Ok(list);
+        return Ok(data);
     }
     
     [HttpGet("Get/{id}")]
@@ -44,7 +44,7 @@ public class GenreController(IGenreServices genreServices, ILogger<GenreControll
     }
     
     [HttpPut("Update/{id}")]
-    public async Task<IActionResult> UpdateGenreAsync(int id, [FromBody] GenreDto value)
+    public async Task<IActionResult> UpdateGenreAsync(int id, [FromBody] GenreViewModel value)
     {
         if (!ModelState.IsValid)
         {
@@ -52,11 +52,10 @@ public class GenreController(IGenreServices genreServices, ILogger<GenreControll
             return BadRequest();
         }
            
-        var isUpdated = await genreServices.UpdateAsync(id, value);
-        if (!isUpdated)
+        var data = await genreServices.UpdateAsync(id, value);
+        if (data == null)
             return BadRequest();
 
-        var list = await genreServices.GetAllAsync();
-        return Ok(list);
+        return Ok(data);
     }
 }

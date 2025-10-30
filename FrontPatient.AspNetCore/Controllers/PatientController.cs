@@ -40,15 +40,15 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
             return View(viewModel);
         }
            
-        var isCreated = await patientServices.CreateAsync(value);
-        if (!isCreated)
+        var data = await patientServices.CreateAsync(value);
+        if (data == null)
         {
             logger.LogWarning("Le patient n'a pas été créé.");
             var viewModel = await patientServices.CreateEmptyAsync();
             return View(viewModel);
         }
 
-        logger.LogInformation("Le patient {FirstName} {LastName} a été créé avec succès", value.FirstName, value.LastName);
+        logger.LogInformation("Le patient {FirstName} {LastName} a été créé avec succès", data.FirstName, data.LastName);
         return RedirectToAction(nameof(Index));
     }
     
@@ -81,8 +81,8 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
             return BadRequest();
         }
            
-        var isUpdated = await patientServices.UpdateAsync(id, value);
-        if (!isUpdated)
+        var data = await patientServices.UpdateAsync(id, value);
+        if (data == null)
             return BadRequest();
 
         return RedirectToAction(nameof(Index));
