@@ -1,5 +1,5 @@
-﻿using FrontPatient.AspNetCore.Models.ViewModels;
-using PatientShared.Models.Dtos;
+﻿using FrontPatient.AspNetCore.Models.Dtos;
+using FrontPatient.AspNetCore.Models.ViewModels;
 
 namespace FrontPatient.AspNetCore.Services;
 
@@ -8,7 +8,7 @@ public interface ILoginServices
     public Task<TokenDto?> LoginAsync(LoginViewModel value);
 }
 
-public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory, IHttpContextAccessor accessor) : ILoginServices, IDisposable
+public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory) : ILoginServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient("AuthorizedClient");
     
@@ -34,7 +34,7 @@ public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory cli
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la connexion: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la connexion");
             return null;
         }
     }

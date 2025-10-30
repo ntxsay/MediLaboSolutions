@@ -1,3 +1,4 @@
+using System.Text.Json;
 using BackPatient.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using PatientShared.Models.Dtos;
@@ -13,8 +14,15 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllPatientsAsync()
     {
-        var datas = await patientServices.GetAllPatientsAsync();
+        var datas = await patientServices.GetAllAsync();
         return Ok(datas);
+    }
+    
+    [HttpGet("CreateEmpty")]
+    public async Task<IActionResult> CreateEmptyPatientAsync()
+    {
+        var data = await patientServices.CreateEmptyAsync();
+        return Ok(data);
     }
 
     [HttpPost("Create")]
@@ -25,12 +33,18 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
             logger.LogError("Les données reçues pour la création du patient ne sont pas valides.");
             return BadRequest();
         }
-           
+        
+        var json = JsonSerializer.Serialize(value);
+        logger.LogInformation(json);   
+        
         var isCreated = await patientServices.CreateAsync(value);
         if (!isCreated)
+        {
+            logger.LogError("Le patient n'a pas été créé.");
             return BadRequest();
+        }
 
-        var list = await patientServices.GetAllPatientsAsync();
+        var list = await patientServices.GetAllAsync();
         return Ok(list);
     }
     
@@ -65,7 +79,7 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
         if (!isUpdated)
             return BadRequest();
 
-        var list = await patientServices.GetAllPatientsAsync();
+        var list = await patientServices.GetAllAsync();
         return Ok(list);
     }
 }

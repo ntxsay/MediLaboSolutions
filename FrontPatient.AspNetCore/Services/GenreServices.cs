@@ -1,14 +1,15 @@
-﻿using PatientShared.Models.Dtos;
-using GenreDto = FrontPatient.AspNetCore.Models.ViewModels.GenreDto;
+﻿using FrontPatient.AspNetCore.Models.Dtos;
+using FrontPatient.AspNetCore.Models.ViewModels;
+using FrontPatient.AspNetCore.Utilities;
 
 namespace FrontPatient.AspNetCore.Services;
 
 public interface IGenreServices
 {
-    public Task<GenreDto[]> GetAllAsync();
-    public Task<GenreDto?> GetAsync(int id);
-    public Task<bool> CreateAsync(GenreDto value);
-    public Task<bool> UpdateAsync(int id, GenreDto value);
+    public Task<GenreViewModel[]> GetAllAsync();
+    public Task<GenreViewModel?> GetAsync(int id);
+    public Task<bool> CreateAsync(GenreViewModel value);
+    public Task<bool> UpdateAsync(int id, GenreViewModel value);
     public Task<bool> DeleteAsync(int id);
 }
 
@@ -16,90 +17,96 @@ public class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory cli
 {
     private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
     
-    public async Task<GenreDto[]> GetAllAsync()
+    public async Task<GenreViewModel[]> GetAllAsync()
     {
         try
         {
             var response = await _client.GetAsync("genre/All");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Une erreur est survenue lors de la récupération des genres");
+                logger.LogWarning("Une erreur est survenue lors de la récupération des genres : {0}", response.ReasonPhrase);
+                return [];
             }
             
             var datas = await response.Content.ReadFromJsonAsync<GenreDto[]>();
             if (datas == null)
             {
-                throw new Exception("Une erreur est survenue lors de la récupération des genres");
+                logger.LogWarning("Les genres n'ont pas été trouvés.");
+                return [];  
             }
             
-            return datas;
+            return datas.Select(s => s.ToViewModel()).ToArray();
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la récupération des genres: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération des genres");
             return [];
         }
     }
     
-    public async Task<GenreDto?> GetAsync(int id)
+    public async Task<GenreViewModel?> GetAsync(int id)
     {
         try
         {
             var response = await _client.GetAsync($"genre/Get/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Une erreur est survenue lors de la récupération du genre");
+                logger.LogWarning("Une erreur est survenue lors de la récupération du genre : {0}", response.ReasonPhrase);
+                return null;       
             }
             
             var data = await response.Content.ReadFromJsonAsync<GenreDto>();
             if (data == null)
             {
-                throw new Exception("Une erreur est survenue lors de la récupération du genre");
+                logger.LogWarning("Le genre n'a pas été trouvé.");
+                return null;       
             }
             
-            return data;
+            return data.ToViewModel();
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la récupération du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du genre");
             return null;
         }
     }
     
-    public async Task<bool> CreateAsync(GenreDto value)
+    public async Task<bool> CreateAsync(GenreViewModel value)
     {
         try
         {
             var response = await _client.PostAsJsonAsync("genre/Create", value);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Une erreur est survenue lors de la création du genre");
+                logger.LogWarning("Une erreur est survenue lors de la création du genre : {0}", response.ReasonPhrase);
+                return false;              
             }
             
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la création du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la création du genre");
             return false;
         }
     }
     
-    public async Task<bool> UpdateAsync(int id, GenreDto value)
+    public async Task<bool> UpdateAsync(int id, GenreViewModel value)
     {
         try
         {
             var response = await _client.PutAsJsonAsync($"genre/Update/{id}", value);
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Une erreur est survenue lors de la mise à jour du genre");
+                logger.LogWarning("Une erreur est survenue lors de la mise à jour du genre : {0}", response.ReasonPhrase);
+                return false;              
             }
             
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la mise à jour du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la mise à jour du genre");
             return false;
         }
     }
@@ -111,14 +118,15 @@ public class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory cli
             var response = await _client.DeleteAsync($"genre/Delete/{id}");
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception("Une erreur est survenue lors de la suppression du genre");
+                logger.LogWarning("Une erreur est survenue lors de la suppression du genre : {0}", response.ReasonPhrase);
+                return false;              
             }
             
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la suppression du genre: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la suppression du genre.");
             return false;
         }
     }

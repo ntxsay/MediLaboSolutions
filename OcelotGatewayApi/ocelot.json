@@ -1,6 +1,22 @@
 {
   "Routes": [
     {
+      "DownstreamPathTemplate": "/api/patient/createEmpty",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientWebapi",
+          "Port": 8082
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/api/patient/createEmpty",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/patient/all",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

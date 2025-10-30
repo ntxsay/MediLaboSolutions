@@ -1,15 +1,15 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using FrontPatient.AspNetCore.Models;
+using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Services;
-using FrontPatient.AspNetCore.Models.Dtos;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FrontPatient.AspNetCore.Controllers;
 
+[Authorize]
 public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices) : Controller
 {
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -17,7 +17,41 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return View(patients);
     }
     
-    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        var viewModel = await patientServices.CreateEmptyAsync();
+        if (viewModel == null)
+        {
+            return NotFound();
+        }
+
+        return View(viewModel);
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(PatientViewModel value)
+    {
+        if (!ModelState.IsValid)
+        {
+            logger.LogError("Les données reçues pour la mise à jour du patient ne sont pas valides.");
+            var viewModel = await patientServices.CreateEmptyAsync();
+            return View(viewModel);
+        }
+           
+        var isCreated = await patientServices.CreateAsync(value);
+        if (!isCreated)
+        {
+            logger.LogWarning("Le patient n'a pas été créé.");
+            var viewModel = await patientServices.CreateEmptyAsync();
+            return View(viewModel);
+        }
+
+        logger.LogInformation("Le patient {FirstName} {LastName} a été créé avec succès", value.FirstName, value.LastName);
+        return RedirectToAction(nameof(Index));
+    }
+    
     [HttpGet]
     public async Task<IActionResult> Update(int? id)
     {
@@ -39,7 +73,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Update(int id, PatientDto value)
+    public async Task<IActionResult> Update(int id, PatientViewModel value)
     {
         if (!ModelState.IsValid)
         {

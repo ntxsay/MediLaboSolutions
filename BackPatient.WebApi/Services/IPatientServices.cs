@@ -7,9 +7,10 @@ namespace BackPatient.WebApi.Services;
 
 public interface IPatientServices
 {
-    public Task<PatientDto[]> GetAllPatientsAsync();
+    public Task<PatientDto[]> GetAllAsync();
     public Task<bool> ExistsAsync(string firstName, string lastName, DateOnly birthDate);
     public Task<bool> ExistsAsync(int id);
+    public Task<PatientDto?> CreateEmptyAsync();
     public Task<bool> CreateAsync(PatientDto value);
     public Task<bool> CreateAsync(PatientDto[] values);
     public Task<PatientDto?> DetailsAsync(int id);
@@ -20,7 +21,7 @@ public interface IPatientServices
 
 public class PatientServices(BackPatientDbContext context, IGenreServices genreServices, ILogger<PatientServices> logger) : IPatientServices
 {
-    public async Task<PatientDto[]> GetAllPatientsAsync()
+    public async Task<PatientDto[]> GetAllAsync()
     {
         try
         {
@@ -76,6 +77,15 @@ public class PatientServices(BackPatientDbContext context, IGenreServices genreS
             return false;
         }
     }
+    
+    public async Task<PatientDto?> CreateEmptyAsync()
+    {
+        var dto = new PatientDto
+        {
+            Genres = await genreServices.GetAllAsync()
+        };
+        return dto;  
+    }
 
     public async Task<bool> CreateAsync(PatientDto value)
     {
@@ -83,6 +93,7 @@ public class PatientServices(BackPatientDbContext context, IGenreServices genreS
         {
             var entity = value.ConvertToEntity();
             entity.Id = 0;
+            entity.Genre = null!;
             
             await context.Patients.AddAsync(entity);
             await context.SaveChangesAsync();
@@ -94,7 +105,7 @@ public class PatientServices(BackPatientDbContext context, IGenreServices genreS
         }
         catch (Exception ex)
         {
-            logger.LogError($"Une erreur est survenue lors de la création du patient: {ex.Message}");
+            logger.LogError(ex, "Une erreur est survenue lors de la création du patient");
             return false;
         }  
     }
