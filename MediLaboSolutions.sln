@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotGatewayApi", "OcelotG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontPatient.AspNetCore", "FrontPatient.AspNetCore\FrontPatient.AspNetCore.csproj", "{A0E96265-3A47-46ED-A619-969D01E6B716}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient.NoteHistory.WebApi", "BackPatient.NoteHistory.WebApi\BackPatient.NoteHistory.WebApi.csproj", "{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,5 +37,9 @@ Global
 		{A0E96265-3A47-46ED-A619-969D01E6B716}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0E96265-3A47-46ED-A619-969D01E6B716}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0E96265-3A47-46ED-A619-969D01E6B716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
