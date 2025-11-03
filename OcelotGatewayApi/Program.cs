@@ -72,6 +72,7 @@ builder.Services.AddScoped<ILoginServices, LoginServices>();
 
 
 var app = builder.Build();
+await IdentityDataSeeder.EnsurePopulatedAsync(app, builder.Configuration);
 
 app.UseRouting();
 app.UseHttpsRedirection();
@@ -81,7 +82,6 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-await IdentityDataSeeder.EnsurePopulated(app, builder.Configuration);
 
 await app.UseOcelot();
 

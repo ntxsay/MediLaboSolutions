@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace OcelotGatewayApi.Data.Seeders;
 
@@ -7,8 +8,12 @@ namespace OcelotGatewayApi.Data.Seeders;
 /// </summary>
 public static class IdentityDataSeeder
 {
-    public static async Task EnsurePopulated(IApplicationBuilder app, IConfiguration config)
+    public static async Task EnsurePopulatedAsync(IApplicationBuilder app, IConfiguration config)
     {
+        using var scope = app.ApplicationServices.CreateScope();
+        await using var dbContext = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+        await dbContext.Database.MigrateAsync();
+        
         var adminUserName = config.GetSection("UserIds:AdminUser").Value;
         var adminPassword = config.GetSection("UserIds:AdminPassword").Value;
         
@@ -18,7 +23,6 @@ public static class IdentityDataSeeder
             return;
         }
         
-        using var scope = app.ApplicationServices.CreateScope();
         var userManager = (UserManager<IdentityUser>)scope.ServiceProvider.GetRequiredService(typeof(UserManager<IdentityUser>));
        
         var adminUser = await userManager.FindByIdAsync(adminUserName);

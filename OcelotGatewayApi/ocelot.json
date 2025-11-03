@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/PatientNote/GetByPatientId",
+      "DownstreamPathTemplate": "/api/PatientNote/GetByPatientId/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -13,7 +13,7 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "UpstreamPathTemplate": "/api/PatientNote/GetByPatientId",
+      "UpstreamPathTemplate": "/api/PatientNote/GetByPatientId/{id}",
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
