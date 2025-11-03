@@ -11,10 +11,8 @@ services:
       context: .
       dockerfile: FrontPatient.AspNetCore/Dockerfile
     ports:
-      - "8085:8085"
       - "8086:8086"
     environment:
-      #https://0.0.0.0:8083;
       ASPNETCORE_URLS: http://0.0.0.0:8086
       ASPNETCORE_ENVIRONMENT: Development
       
@@ -25,10 +23,8 @@ services:
       context: .
       dockerfile: OcelotGatewayApi/Dockerfile
     ports:
-      - "8083:8083"
       - "8084:8084"
     environment:
-      #https://0.0.0.0:8083;
       ASPNETCORE_URLS: http://0.0.0.0:8084
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbAuth;"
@@ -42,18 +38,39 @@ services:
       context: .
       dockerfile: BackPatient.WebApi/Dockerfile
     ports:
-      - "8081:8081"
       - "8082:8082"
     environment:
-      #https://0.0.0.0:8081;
       ASPNETCORE_URLS: http://0.0.0.0:8082
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbPatient;"
     volumes:
       - ./BackPatient.WebApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
+  #Base de données MongoDB
+  mongoNotesPatient:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: Password12345
+    volumes:
+      - mongo_data:/data/db
+
+  #Interface admin MongoDB
+  mongoNotesPatientExpress:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:Password12345@mongoNotesPatient:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: P@ssword789
+  
   # Base de données Postgresql   
-  # Lancer ce service : docker compose up postgresBackPatient --remove-orphans
   postgresBackPatient:
     image: postgres
     restart: always
@@ -80,3 +97,4 @@ services:
 #Definir les volumes 
 volumes:
   pgdata:
+  mongo_data:
