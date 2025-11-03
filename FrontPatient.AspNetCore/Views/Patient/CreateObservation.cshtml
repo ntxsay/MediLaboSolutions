@@ -1,0 +1,21 @@
+﻿@model FrontPatient.AspNetCore.Models.ViewModels.PatientNoteViewModel
+
+@{
+    ViewData["Title"] = "Ajouter une observation";
+}
+
+<section>
+    <h2>Ajouter une observation pour le patient n°@ViewBag.PatientId - @ViewBag.PatientName</h2>
+    <form asp-action="CreateObservation" method="post">
+        <input type="hidden" asp-for="PatientId" />
+        <input type="hidden" asp-for="PatientName" />
+        <div class="form-group">
+            <label asp-for="Note" class="control-label"></label>
+            <textarea asp-for="Note" class="form-control"></textarea>
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div >
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Ajouter</button>
+        </div>
+    </form>
+</section>

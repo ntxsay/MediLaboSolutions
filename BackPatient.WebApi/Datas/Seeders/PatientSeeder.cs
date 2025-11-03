@@ -14,6 +14,9 @@ public static class PatientSeeder
             using var scope = app.ApplicationServices.CreateScope();
             var appContext = scope.ServiceProvider.GetRequiredService<BackPatientDbContext>();
             var genreServices = scope.ServiceProvider.GetRequiredService<IGenreServices>();
+            var logger = scope.ServiceProvider
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger("DatabaseSeeder");
 
             await appContext.Database.MigrateAsync();
 
@@ -41,11 +44,22 @@ public static class PatientSeeder
             }
 
             if (genresToAdd.Count > 0)
-                await genreServices.CreateAsync(genresToAdd.ToArray());
-
-            if (isDevelopment)
             {
-                var patientServices = scope.ServiceProvider.GetRequiredService<IPatientServices>();
+                var datas = await genreServices.CreateAsync(genresToAdd.ToArray());
+                if (datas.Length > 0)
+                {
+                    maleGenre.Id = datas.FirstOrDefault(f => f.Name == "M")?.Id ?? 0;
+                    femaleGenre.Id = datas.FirstOrDefault(f => f.Name == "F")?.Id ?? 0;
+                }
+            }
+            
+            if (maleGenre.Id == 0 || femaleGenre.Id == 0)
+            {
+                logger.LogError("Les genres M et F n'ont pas été trouvés.");
+                return;
+            }
+
+            var patientServices = scope.ServiceProvider.GetRequiredService<IPatientServices>();
                 var patients = new List<PatientViewModel>();
 
                 //Patient 1
@@ -122,7 +136,6 @@ public static class PatientSeeder
 
                 if (patients.Count > 0)
                     await patientServices.CreateAsync(patients.ToArray());
-            }
         }
         catch (Exception e)
         {

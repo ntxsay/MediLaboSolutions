@@ -60,6 +60,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 builder.Services.AddScoped<ILoginServices, LoginServices>();
 builder.Services.AddScoped<IGenreServices, GenreServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
+builder.Services.AddScoped<IPatientNoteServices, PatientNoteServices>();
 
 var app = builder.Build();
 
@@ -80,12 +81,8 @@ app.UseAuthorization();
 app.MapStaticAssets();
 app.MapRazorPages();
 app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Patient}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

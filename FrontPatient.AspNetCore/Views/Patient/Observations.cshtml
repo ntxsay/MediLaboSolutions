@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Observations";
+}
+
+@model FrontPatient.AspNetCore.Models.ViewModels.PatientNoteViewModel[]
+
+<section >
+    
+    <h2>Observations du patient n°@ViewBag.PatientId - @ViewBag.PatientName</h2>
+    <a asp-action="CreateObservation" asp-route-patientId="@ViewBag.PatientId">Ajouter une observation</a>
+    <table class="table table-bordered">
+        <tr>
+            <th>Note</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Note</td>
+                <td></td>
+            </tr>
+        }
+    </table>
+</section>

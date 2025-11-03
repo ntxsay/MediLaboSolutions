@@ -68,6 +68,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddLogging();
 builder.Services.AddScoped<IGenreServices, GenreServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
 

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace FrontPatient.AspNetCore.Controllers;
 
 [Authorize]
-public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices) : Controller
+public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -86,6 +86,90 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
             return BadRequest();
 
         return RedirectToAction(nameof(Index));
+    }
+    
+    [HttpGet("{patientId:int}")]
+    public async Task<IActionResult> Observations(int patientId)
+    {
+        var patient = await patientServices.DetailAsync(patientId);
+        if (patient == null)
+        {
+            logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
+            return NotFound();
+        }
+        
+        var notes = await patientNoteServices.GetAllByPatientIdAsync(patientId);
+        
+        ViewBag.PatientId = patientId;
+        ViewBag.PatientName = patient.FirstName + " " + patient.LastName;
+        return View(notes);
+    }
+    
+    [HttpGet("Create-Observation/{patientId:int}")]
+    public async Task<IActionResult> CreateObservation(int patientId)
+    {
+        var patient = await patientServices.DetailAsync(patientId);
+        if (patient == null)
+        {
+            logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
+            return NotFound();
+        }
+        
+        ViewBag.PatientId = patientId;
+        ViewBag.PatientName = patient.FirstName + " " + patient.LastName;
+        return View(new PatientNoteViewModel()
+        {
+            PatientId = patientId,
+            PatientName = patient.FirstName + " " + patient.LastName
+        });
+    }
+    
+    [HttpPost("Create-Observation/{patientId:int}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateObservation(int patientId, PatientNoteViewModel value)
+    {
+        if (!ModelState.IsValid)
+        {
+            logger.LogError("Les données reçues pour la création de la note du patient n°{patientId} ne sont pas valides.", patientId);
+            var patient = await patientServices.DetailAsync(patientId);
+            if (patient == null)
+            {
+                logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
+                return NotFound();
+            }
+        
+            ViewBag.PatientId = patientId;
+            ViewBag.PatientName = patient.FirstName + " " + patient.LastName;
+            return View(new PatientNoteViewModel()
+            {
+                PatientId = patientId,
+                PatientName = patient.FirstName + " " + patient.LastName
+            });
+        }
+           
+        value.PatientId = patientId;
+        var data = await patientNoteServices.CreateAsync(value);
+        if (data == null)
+        {
+            logger.LogWarning("Le patient n'a pas été créé.");
+            var patient = await patientServices.DetailAsync(patientId);
+            if (patient == null)
+            {
+                logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
+                return NotFound();
+            }
+        
+            ViewBag.PatientId = patientId;
+            ViewBag.PatientName = patient.FirstName + " " + patient.LastName;
+            return View(new PatientNoteViewModel()
+            {
+                PatientId = patientId,
+                PatientName = patient.FirstName + " " + patient.LastName
+            });
+        }
+
+        logger.LogInformation("La note du patient n°{patientId} a été créée avec succès", patientId);
+        return RedirectToAction(nameof(Observations), new { patientId });
     }
     
 

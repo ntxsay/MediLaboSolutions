@@ -56,4 +56,26 @@ public static class Converters
             Genres = new SelectList(dto.Genres.Select(s => s.ToViewModel()).ToArray(), nameof(GenreViewModel.Id), nameof(GenreViewModel.Name)), 
         };
     }
+    
+    public static PatientNoteViewModel ToViewModel(this PatientNoteDto dto)
+    {
+        return new PatientNoteViewModel
+        {
+            Id = dto.Id,
+            PatientId = dto.PatientId,
+            PatientName = dto.PatientName,
+            Note = dto.Note
+        };
+    }
+    
+    public static PatientNoteDto ToDto(this PatientNoteViewModel viewModel)
+    {
+        return new PatientNoteDto
+        {
+            Id = viewModel.Id,
+            PatientId = viewModel.PatientId,
+            PatientName = viewModel.PatientName,
+            Note = viewModel.Note
+        };
+    }
 }

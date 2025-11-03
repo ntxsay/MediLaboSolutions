@@ -29,7 +29,7 @@
                 <td>@p.BirthDate</td>
                 <td>@p.PostalAddress</td>
                 <td>@p.NoTelephone</td>
-                <td><a asp-action="Update" asp-route-id="@p.Id">Editer</a></td>
+                <td><a asp-action="Update" asp-route-id="@p.Id">Editer</a> | <a asp-action="Observations" asp-route-patientId="@p.Id">Observations</a></td>
             </tr>
         }
     </table>
