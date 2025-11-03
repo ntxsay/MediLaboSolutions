@@ -1,4 +1,5 @@
 using BackPatient.NoteHistory.WebApi.Models;
+using BackPatient.NoteHistory.WebApi.Services;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.Configure<MediLaboSolutionsDatabaseSettings>(
     builder.Configuration.GetSection("MediLaboSolutionsDatabase"));
 
+builder.Services.AddSingleton<IPatientNoteServices, PatientNoteServices>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,6 +40,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

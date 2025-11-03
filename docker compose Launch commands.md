@@ -36,6 +36,15 @@ docker-compose build backPatientWebapi
 docker-compose up backPatientWebapi
 ```
 
+## Arrêter le conteneur backPatientNoteHistoryWebapi, libérer toutes ses ressources, le builder puis le lancer :
+
+```
+docker-compose down -v backPatientNoteHistoryWebapi
+docker-compose build backPatientNoteHistoryWebapi
+docker-compose up backPatientNoteHistoryWebapi
+```
+
+
 ## Arrêter le conteneur ocelotWebapi, libérer toutes ses ressources, le builder puis le lancer :
 
 ```

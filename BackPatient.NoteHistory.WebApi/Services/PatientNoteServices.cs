@@ -1,8 +1,10 @@
 ﻿using BackPatient.NoteHistory.WebApi.Models;
 using BackPatient.NoteHistory.WebApi.Models.Dtos;
 using BackPatient.NoteHistory.WebApi.Models.Entities;
+using BackPatient.NoteHistory.WebApi.Models.ViewModels;
 using BackPatient.NoteHistory.WebApi.Utilities;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BackPatient.NoteHistory.WebApi.Services;
@@ -10,9 +12,10 @@ namespace BackPatient.NoteHistory.WebApi.Services;
 public interface IPatientNoteServices
 {
     Task<PatientNoteDto[]> GetAllAsync();
+    Task<PatientNoteDto[]> GetAllByPatientIdAsync(int patientId);
     Task<PatientNoteDto?> GetAsync(string id);
-    Task<PatientNoteDto?> CreateAsync(PatientNoteDto data);
-    Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteDto data);
+    Task<PatientNoteDto?> CreateAsync(PatientNoteViewModel data);
+    Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteViewModel data);
     Task<bool> RemoveAsync(string id);
 }
 
@@ -48,6 +51,20 @@ public class PatientNoteServices : IPatientNoteServices
             return [];
         }
     }
+    
+    public async Task<PatientNoteDto[]> GetAllByPatientIdAsync(int patientId)
+    {
+        try
+        {
+            var datas =  await _patientNotesCollection.Find(x => x.PatientId == patientId).ToListAsync();
+            return datas.Select(s => s.ConvertToDto()).ToArray();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Une erreur est survenue lors de la récupération des notes");
+            return [];
+        }
+    }
 
     public async Task<PatientNoteDto?> GetAsync(string id)
     {
@@ -69,7 +86,7 @@ public class PatientNoteServices : IPatientNoteServices
         }
     }
 
-    public async Task<PatientNoteDto?> CreateAsync(PatientNoteDto data)
+    public async Task<PatientNoteDto?> CreateAsync(PatientNoteViewModel data)
     {
         if (string.IsNullOrEmpty(data.PatientName) || string.IsNullOrWhiteSpace(data.PatientName))
         {
@@ -86,11 +103,13 @@ public class PatientNoteServices : IPatientNoteServices
         try
         {
             var entity = data.ConvertToEntity();
+            entity.Id = null;
 
             await _patientNotesCollection.InsertOneAsync(entity);
+            data.Id = entity.Id;
             
             _logger.LogInformation("La note n°{id} a été créée avec succès", entity.Id);
-            return data;
+            return data.ConvertToDto();
         }
         catch (Exception e)
         {
@@ -99,22 +118,17 @@ public class PatientNoteServices : IPatientNoteServices
         }
     }
 
-    public async Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteDto data)
+    public async Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteViewModel data)
     {
-        if (string.IsNullOrEmpty(data.PatientName) || string.IsNullOrWhiteSpace(data.PatientName))
-        {
-            _logger.LogError("Le nom du patient ne peut pas être null, vide ou ne contenir que des espaces blancs.");
-            return null;
-        }
-        
-        if (string.IsNullOrEmpty(data.Note) || string.IsNullOrWhiteSpace(data.Note))
-        {
-            _logger.LogError("La note concernant le patient ne peut pas être null, vide ou ne contenir que des espaces blancs.");
-            return null;
-        }
-        
         try
         {
+            var equalIdFilter = Builders<PatientNoteEntity>.Filter.Eq(nameof(PatientNoteEntity.Id), id);
+            if (!await _patientNotesCollection.Find(equalIdFilter).AnyAsync())
+            {
+                _logger.LogWarning("La note n°{id} n'a pas été trouvée.", id);
+                return null;
+            }
+            
             var entity = data.ConvertToEntity();
 
             var result = await _patientNotesCollection.ReplaceOneAsync(x => x.Id == id, entity);
@@ -126,7 +140,7 @@ public class PatientNoteServices : IPatientNoteServices
             }
             
             _logger.LogInformation("La note n°{id} a été mise à jour avec succès", id);
-            return data;
+            return data.ConvertToDto();
         }
         catch (Exception e)
         {
@@ -139,6 +153,13 @@ public class PatientNoteServices : IPatientNoteServices
     {
         try
         {
+            var equalIdFilter = Builders<PatientNoteEntity>.Filter.Eq(nameof(PatientNoteEntity.Id), id);
+            if (!await _patientNotesCollection.Find(equalIdFilter).AnyAsync())
+            {
+                _logger.LogWarning("La note n°{id} n'a pas été trouvée.", id);
+                return false;
+            }
+            
             var result = await _patientNotesCollection.DeleteOneAsync(x => x.Id == id);
             
             if (result.DeletedCount == 0)
