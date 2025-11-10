@@ -82,9 +82,10 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
         };
     }
     
-    private static string GenerateRiskReport(byte patientAge, string patientGender, string[] patientNotes)
+    private string GenerateRiskReport(byte patientAge, string patientGender, string[] patientNotes)
     {
-        var countTriggers = patientNotes.Count(a => _terminologies.Contains(a, StringComparer.OrdinalIgnoreCase));
+        var countTriggers = patientNotes.Select(c => _terminologies.Count(a => c.Contains(a, StringComparison.OrdinalIgnoreCase))).Sum();
+        logger.LogInformation("count triggers : {count}", countTriggers);
         if (countTriggers == 0)
             return "Aucun risque";
         
