@@ -17,6 +17,7 @@ public interface IPatientServices
     public Task<PatientDto?> DetailsAsync(int id);
     public Task<PatientDto?> GetAsync(int id);
     public Task<PatientViewModel?> GetViewModelAsync(int id);
+    public Task<PatientReportInfoDto?> GetReportInfoAsync(int id);
     public Task<PatientDto?> UpdateAsync(int id, PatientViewModel value);
     public Task<bool> DeleteAsync(int id);
 }
@@ -233,6 +234,33 @@ public class PatientServices(BackPatientDbContext context, IGenreServices genreS
             return null;
         }        
     }
+    
+    public async Task<PatientReportInfoDto?> GetReportInfoAsync(int id)
+    {
+        try
+        {
+            var entity = await context.Patients.AsNoTracking()
+                .Include(i => i.Genre)
+                .FirstOrDefaultAsync(i => i.Id == id);
+            if (entity == null)
+            {
+                logger.LogWarning("Le patient n°{id} n'a pas été trouvé", id);
+                return null;
+            }
+            
+            return new PatientReportInfoDto
+            {
+                PatientId = entity.Id,
+                PatientAge = (byte)(DateTime.Now.Year - entity.BirthDate.Year),
+                PatientGender = entity.Genre.Name
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Une erreur est survenue lors de la récupération du patient n°{id}", id);
+            return null;
+        }        
+    }
 
     public async Task<PatientDto?> UpdateAsync(int id, PatientViewModel value)
     {
@@ -276,11 +304,6 @@ public class PatientServices(BackPatientDbContext context, IGenreServices genreS
 
     public async Task<bool> DeleteAsync(int id)
     {
-        /*
-         Attention : ExecuteDeleteAsync() n'est pas supporté par tous les fournisseurs de base de données Ex : InMemory Database
-        await context.Patients.Where(w => w.Id == id).ExecuteDeleteAsync();
-        */
-
         try
         {
             var entity = await context.Patients.FindAsync(id);

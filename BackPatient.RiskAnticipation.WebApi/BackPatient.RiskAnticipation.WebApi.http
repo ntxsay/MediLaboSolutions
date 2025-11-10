@@ -1,0 +1,6 @@
+@BackPatient.RiskAnticipation.WebApi_HostAddress = http://localhost:5135
+
+GET {{BackPatient.RiskAnticipation.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

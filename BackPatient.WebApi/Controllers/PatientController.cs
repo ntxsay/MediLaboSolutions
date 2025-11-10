@@ -62,6 +62,15 @@ public class PatientController(IPatientServices patientServices, ILogger<Patient
         return Ok(patient);
     }
     
+    [HttpGet("GetReportInfo/{id}")]
+    public async Task<IActionResult> GetReportInfoAsync(int id)
+    {
+        var patient = await patientServices.GetReportInfoAsync(id);
+        if (patient == null)
+            return NotFound();
+        return Ok(patient);
+    }  
+    
     [HttpPut("Update/{id}")]
     public async Task<IActionResult> UpdatePatientAsync(int id, [FromBody] PatientViewModel value)
     {
