@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontPatient.AspNetCore", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient.NoteHistory.WebApi", "BackPatient.NoteHistory.WebApi\BackPatient.NoteHistory.WebApi.csproj", "{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackPatient.RiskAnticipation.WebApi", "BackPatient.RiskAnticipation.WebApi\BackPatient.RiskAnticipation.WebApi.csproj", "{236860D7-45A8-4B38-88BA-0C4C7B989921}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,5 +43,9 @@ Global
 		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D0AB88C-4B09-4CE3-B54A-B781DF67AC21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236860D7-45A8-4B38-88BA-0C4C7B989921}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236860D7-45A8-4B38-88BA-0C4C7B989921}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236860D7-45A8-4B38-88BA-0C4C7B989921}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236860D7-45A8-4B38-88BA-0C4C7B989921}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -23,7 +23,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Login/Logout";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
-        options.AccessDeniedPath = "/Forbidden/";
     });
 
 builder.Services.AddHttpContextAccessor();
@@ -61,6 +60,7 @@ builder.Services.AddScoped<ILoginServices, LoginServices>();
 builder.Services.AddScoped<IGenreServices, GenreServices>();
 builder.Services.AddScoped<IPatientServices, PatientServices>();
 builder.Services.AddScoped<IPatientNoteServices, PatientNoteServices>();
+builder.Services.AddScoped<IPatientRiskReportServices, PatientRiskReportServices>();
 
 var app = builder.Build();
 

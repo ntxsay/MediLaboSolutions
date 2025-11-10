@@ -2,6 +2,8 @@
 
 ```
 docker-compose down -v backPatientWebapi
+docker-compose down -v backPatientNoteHistoryWebapi
+docker-compose down -v backPatientRiskAnticipationWebapi
 docker-compose down -v ocelotWebapi
 docker-compose down -v frontPatientWebApp
 ```
@@ -42,6 +44,14 @@ docker-compose up backPatientWebapi
 docker-compose down -v backPatientNoteHistoryWebapi
 docker-compose build backPatientNoteHistoryWebapi
 docker-compose up backPatientNoteHistoryWebapi
+```
+
+## Arrêter le conteneur backPatientRiskAnticipationWebapi, libérer toutes ses ressources, le builder puis le lancer :
+
+```
+docker-compose down -v backPatientRiskAnticipationWebapi
+docker-compose build backPatientRiskAnticipationWebapi
+docker-compose up backPatientRiskAnticipationWebapi
 ```
 
 

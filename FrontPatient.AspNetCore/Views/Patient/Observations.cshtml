@@ -7,6 +7,9 @@
 <section >
     
     <h2>Observations du patient n°@ViewBag.PatientId - @ViewBag.PatientName</h2>
+    <div style="border: 1px solid gray">
+        <span>@ViewBag.Report</span>
+    </div>
     <a asp-action="CreateObservation" asp-route-patientId="@ViewBag.PatientId">Ajouter une observation</a>
     <table class="table table-bordered">
         <tr>

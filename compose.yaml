@@ -31,6 +31,18 @@ services:
     volumes:
       - ./OcelotGatewayApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
+  #Projet BackPatient RiskAnticipation
+  backPatientRiskAnticipationWebapi:
+    image: backpatient.riskanticipation.webapi
+    build:
+      context: .
+      dockerfile: BackPatient.RiskAnticipation.WebApi/Dockerfile
+    ports:
+      - "8090:8090"
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8090
+      ASPNETCORE_ENVIRONMENT: Development
+  
   #Projet BackPatient NoteHistory
   backPatientNoteHistoryWebapi:
     image: backpatient.notehistory.webapi

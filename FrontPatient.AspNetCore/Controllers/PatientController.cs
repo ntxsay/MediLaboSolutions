@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace FrontPatient.AspNetCore.Controllers;
 
 [Authorize]
-public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices) : Controller
+public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices, IPatientRiskReportServices patientRiskReportServices) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -102,6 +102,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         
         ViewBag.PatientId = patientId;
         ViewBag.PatientName = patient.FirstName + " " + patient.LastName;
+        ViewBag.Report = await patientRiskReportServices.GetPatientRiskReportAsync(patientId);
         return View(notes);
     }
     

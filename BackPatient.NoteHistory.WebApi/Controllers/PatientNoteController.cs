@@ -17,6 +17,10 @@ namespace BackPatient.NoteHistory.WebApi.Controllers
         [HttpGet("GetByPatientId/{id:int}")]
         public async Task<ActionResult<PatientNoteDto[]>> GetAllByPatientIdAsync(int id) =>
             Ok(await patientNoteServices.GetAllByPatientIdAsync(id));
+        
+        [HttpGet("GetMinimalByPatientId/{id:int}")]
+        public async Task<ActionResult<PatientNoteMinimalDto[]>> GetAllMinimalByPatientIdAsync(int id) =>
+            Ok(await patientNoteServices.GetAllMinimalByPatientIdAsync(id));
 
         [HttpGet("GetOne/{id:length(24)}")]
         public async Task<ActionResult<PatientNoteDto>> GetAsync(string id)

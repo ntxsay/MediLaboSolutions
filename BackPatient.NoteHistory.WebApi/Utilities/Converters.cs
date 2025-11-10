@@ -6,6 +6,15 @@ namespace BackPatient.NoteHistory.WebApi.Utilities;
 
 internal static class Converters
 {
+    public static PatientNoteMinimalDto ConvertToMinimalDto(this PatientNoteEntity patientNoteEntity)
+    {
+        return new PatientNoteMinimalDto()
+        {
+            PatientId = patientNoteEntity.PatientId,
+            Note = patientNoteEntity.Note
+        };
+    }
+    
     public static PatientNoteDto ConvertToDto(this PatientNoteEntity patientNoteEntity)
     {
         return new PatientNoteDto

@@ -13,6 +13,7 @@ public interface IPatientNoteServices
 {
     Task<PatientNoteDto[]> GetAllAsync();
     Task<PatientNoteDto[]> GetAllByPatientIdAsync(int patientId);
+    public Task<PatientNoteMinimalDto[]> GetAllMinimalByPatientIdAsync(int patientId);
     Task<PatientNoteDto?> GetAsync(string id);
     Task<PatientNoteDto?> CreateAsync(PatientNoteViewModel data);
     Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteViewModel data);
@@ -58,6 +59,20 @@ public class PatientNoteServices : IPatientNoteServices
         {
             var datas =  await _patientNotesCollection.Find(x => x.PatientId == patientId).ToListAsync();
             return datas.Select(s => s.ConvertToDto()).ToArray();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Une erreur est survenue lors de la récupération des notes");
+            return [];
+        }
+    }
+    
+    public async Task<PatientNoteMinimalDto[]> GetAllMinimalByPatientIdAsync(int patientId)
+    {
+        try
+        {
+            var datas =  await _patientNotesCollection.Find(x => x.PatientId == patientId).ToListAsync();
+            return datas.Select(s => s.ConvertToMinimalDto()).ToArray();
         }
         catch (Exception e)
         {

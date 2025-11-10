@@ -13,7 +13,7 @@ public interface IPatientNoteServices
 public class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory) : IPatientNoteServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
-
+    
     public async Task<PatientNoteViewModel[]> GetAllByPatientIdAsync(int id)
     {
         try
