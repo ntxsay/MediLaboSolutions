@@ -1,10 +1,8 @@
-using System.Text;
-using BackPatient.WebApi;
 using BackPatient.WebApi.Datas;
 using BackPatient.WebApi.Datas.Seeders;
 using BackPatient.WebApi.Services;
+using BackPatient.WebApi.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;

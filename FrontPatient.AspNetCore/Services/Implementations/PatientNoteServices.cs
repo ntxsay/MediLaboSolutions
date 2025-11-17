@@ -2,17 +2,11 @@
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Utilities;
 
-namespace FrontPatient.AspNetCore.Services;
+namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public interface IPatientNoteServices
+public class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientNoteServices, IDisposable
 {
-    Task<PatientNoteViewModel[]> GetAllByPatientIdAsync(int id);
-    Task<PatientNoteViewModel?> CreateAsync(PatientNoteViewModel value);
-}
-
-public class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory) : IPatientNoteServices, IDisposable
-{
-    private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
+    private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     
     public async Task<PatientNoteViewModel[]> GetAllByPatientIdAsync(int id)
     {

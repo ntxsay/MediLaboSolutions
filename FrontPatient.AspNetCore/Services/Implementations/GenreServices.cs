@@ -2,16 +2,7 @@
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Utilities;
 
-namespace FrontPatient.AspNetCore.Services;
-
-public interface IGenreServices
-{
-    public Task<GenreViewModel[]> GetAllAsync();
-    public Task<GenreViewModel?> GetAsync(int id);
-    public Task<GenreViewModel?> CreateAsync(GenreViewModel value);
-    public Task<GenreViewModel?> UpdateAsync(int id, GenreViewModel value);
-    public Task<bool> DeleteAsync(int id);
-}
+namespace FrontPatient.AspNetCore.Services.Implementations;
 
 public class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory clientFactory) : IGenreServices, IDisposable
 {

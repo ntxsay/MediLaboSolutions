@@ -1,15 +1,10 @@
 ﻿using BackPatient.RiskAnticipation.WebApi.Models.Dtos;
 
-namespace BackPatient.RiskAnticipation.WebApi.Services;
+namespace BackPatient.RiskAnticipation.WebApi.Services.Implementations;
 
-public interface IRiskAnticipationServices
+public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IRiskAnticipationServices, IDisposable
 {
-    public Task<PatientRiskReportDto?> GeneratePatientRiskReport(int patientId);
-}
-
-public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, IHttpClientFactory clientFactory) : IRiskAnticipationServices, IDisposable
-{
-    private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
+    private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     
     private async Task<PatientReportInfoDto?> GetPatientRiskInfoAsync(int patientId)
     {
@@ -133,7 +128,7 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
             }
         }
 
-        return "Risque non évalué";
+        return "Aucun risque";
     }
 
     private static readonly string[] _terminologies =

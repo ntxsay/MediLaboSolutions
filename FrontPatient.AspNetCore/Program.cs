@@ -2,6 +2,7 @@ using System.Globalization;
 using FrontPatient.AspNetCore.Services;
 using Microsoft.AspNetCore.Localization;
 using FrontPatient.AspNetCore.Handlers;
+using FrontPatient.AspNetCore.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr-FR");
@@ -27,7 +28,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<AuthTokenHandler>();
-builder.Services.AddHttpClient("GatewayClient", client =>
+builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:GatewayClientName"]!, client =>
     {
         client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/");
     })
@@ -39,7 +40,7 @@ builder.Services.AddHttpClient("GatewayClient", client =>
         };
     }).AddHttpMessageHandler<AuthTokenHandler>();
 
-builder.Services.AddHttpClient("AuthorizedClient", client =>
+builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:AuthorizedClientName"]!, client =>
 {
     client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/auth/");
 });

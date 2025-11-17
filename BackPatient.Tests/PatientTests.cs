@@ -1,6 +1,7 @@
 using BackPatient.WebApi.Datas;
 using BackPatient.WebApi.Models.ViewModels;
 using BackPatient.WebApi.Services;
+using BackPatient.WebApi.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;

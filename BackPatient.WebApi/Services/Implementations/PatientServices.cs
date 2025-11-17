@@ -1,26 +1,10 @@
-using BackPatient.WebApi.Utilities;
 using BackPatient.WebApi.Datas;
 using BackPatient.WebApi.Models.Dtos;
 using BackPatient.WebApi.Models.ViewModels;
+using BackPatient.WebApi.Utilities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackPatient.WebApi.Services;
-
-public interface IPatientServices
-{
-    public Task<PatientDto[]> GetAllAsync();
-    public Task<bool> ExistsAsync(string firstName, string lastName, DateOnly birthDate);
-    public Task<bool> ExistsAsync(int id);
-    public Task<PatientDto?> CreateEmptyAsync();
-    public Task<PatientDto?> CreateAsync(PatientViewModel value);
-    public Task<PatientDto[]> CreateAsync(PatientViewModel[] values);
-    public Task<PatientDto?> DetailsAsync(int id);
-    public Task<PatientDto?> GetAsync(int id);
-    public Task<PatientViewModel?> GetViewModelAsync(int id);
-    public Task<PatientReportInfoDto?> GetReportInfoAsync(int id);
-    public Task<PatientDto?> UpdateAsync(int id, PatientViewModel value);
-    public Task<bool> DeleteAsync(int id);
-}
+namespace BackPatient.WebApi.Services.Implementations;
 
 public class PatientServices(BackPatientDbContext context, IGenreServices genreServices, ILogger<PatientServices> logger) : IPatientServices
 {

@@ -1,15 +1,10 @@
 ﻿using FrontPatient.AspNetCore.Models.Dtos;
 
-namespace FrontPatient.AspNetCore.Services;
+namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public interface IPatientRiskReportServices
+public class PatientRiskReportServices(ILogger<PatientRiskReportServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientRiskReportServices, IDisposable
 {
-    public Task<string?> GetPatientRiskReportAsync(int patientId);
-}
-
-public class PatientRiskReportServices(ILogger<PatientRiskReportServices> logger, IHttpClientFactory clientFactory) : IPatientRiskReportServices, IDisposable
-{
-    private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
+    private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
 
     public async Task<string?> GetPatientRiskReportAsync(int patientId)
     {

@@ -1,22 +1,12 @@
 ﻿using FrontPatient.AspNetCore.Models.Dtos;
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Utilities;
-namespace FrontPatient.AspNetCore.Services;
 
-public interface IPatientServices
-{
-    public Task<PatientViewModel[]> GetAllAsync();
-    public Task<PatientViewModel?> DetailAsync(int id);
-    public Task<PatientViewModel?> CreateEmptyAsync();
-    public Task<PatientViewModel?> CreateAsync(PatientViewModel value);
-    public Task<PatientViewModel?> UpdateAsync(int id);
-    public Task<PatientViewModel?> UpdateAsync(int id, PatientViewModel value);
-    public Task<bool> DeleteAsync(int id);
-}
+namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory clientFactory) : IPatientServices, IDisposable
+public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientServices, IDisposable
 {
-    private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
+    private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     
     public async Task<PatientViewModel[]> GetAllAsync()
     {

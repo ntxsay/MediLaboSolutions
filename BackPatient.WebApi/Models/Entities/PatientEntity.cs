@@ -13,5 +13,5 @@ public class PatientEntity
     public string? PostalAddress { get; set; }
     public string? NoTelephone { get; set; }
     
-    public virtual GenreEntity Genre { get; set; } = null!;
+    public GenreEntity Genre { get; set; } = null!;
 }

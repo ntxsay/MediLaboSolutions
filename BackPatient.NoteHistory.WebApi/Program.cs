@@ -1,5 +1,6 @@
 using BackPatient.NoteHistory.WebApi.Models;
 using BackPatient.NoteHistory.WebApi.Services;
+using BackPatient.NoteHistory.WebApi.Services.Implementations;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);

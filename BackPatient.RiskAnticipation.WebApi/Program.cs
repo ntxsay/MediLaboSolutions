@@ -1,5 +1,6 @@
 using BackPatient.RiskAnticipation.WebApi.Handlers;
 using BackPatient.RiskAnticipation.WebApi.Services;
+using BackPatient.RiskAnticipation.WebApi.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,7 +13,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<AuthTokenHandler>();
-builder.Services.AddHttpClient("GatewayClient", client =>
+builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:GatewayClientName"]!, client =>
     {
         client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/");
     })

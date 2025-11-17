@@ -88,7 +88,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return RedirectToAction(nameof(Index));
     }
     
-    [HttpGet("{patientId:int}")]
+    [HttpGet("Patient/Observations/{patientId:int}")]
     public async Task<IActionResult> Observations(int patientId)
     {
         var patient = await patientServices.DetailAsync(patientId);

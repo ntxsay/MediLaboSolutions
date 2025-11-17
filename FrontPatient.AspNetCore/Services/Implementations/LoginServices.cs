@@ -1,16 +1,11 @@
 ﻿using FrontPatient.AspNetCore.Models.Dtos;
 using FrontPatient.AspNetCore.Models.ViewModels;
 
-namespace FrontPatient.AspNetCore.Services;
+namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public interface ILoginServices
+public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : ILoginServices, IDisposable
 {
-    public Task<TokenDto?> LoginAsync(LoginViewModel value);
-}
-
-public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory) : ILoginServices, IDisposable
-{
-    private readonly HttpClient _client = clientFactory.CreateClient("AuthorizedClient");
+    private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:AuthorizedClientName"]!);
     
     public async Task<TokenDto?> LoginAsync(LoginViewModel value)
     {
