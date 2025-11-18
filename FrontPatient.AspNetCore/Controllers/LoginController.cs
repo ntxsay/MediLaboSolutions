@@ -25,7 +25,7 @@ namespace FrontPatient.AspNetCore.Controllers
             }
 
             var result = await loginServices.LoginAsync(model);
-            if (result == null)
+            if (result == null || string.IsNullOrEmpty(result.Token))
             {
                 ModelState.AddModelError("", "Identifiant ou mot de passe incorrect.");
                 return View(model);

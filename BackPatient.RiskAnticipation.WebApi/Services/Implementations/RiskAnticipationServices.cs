@@ -79,57 +79,56 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
     
     private string GenerateRiskReport(byte patientAge, string patientGender, string[] patientNotes)
     {
-        var countTriggers = patientNotes.Select(c => _terminologies.Count(a => c.Contains(a, StringComparison.OrdinalIgnoreCase))).Sum();
+        // Calcul des occurrences de triggers
+        int countTriggers = patientNotes
+            .Sum(note => _terminologies.Count(t => 
+                note.Contains(t, StringComparison.OrdinalIgnoreCase)));
+
         logger.LogInformation("count triggers : {count}", countTriggers);
+
         if (countTriggers == 0)
             return "Aucun risque";
-        
+
+        // -----------------------------
+        //   Moins de 30 ans
+        // -----------------------------
         if (patientAge < 30)
         {
-            switch (patientGender.ToUpper())
-            {
-                case "F":
-                {
-                    switch (countTriggers)
-                    {
-                        case 4:
-                            return "Danger";
-                        case >= 7:
-                            return "Apparition précoce";
-                    }
-                    break;
-                }
-                case "M":
-                {
-                    switch (countTriggers)
-                    {
-                        case 3:
-                            return "Danger";
-                        case >= 5:
-                            return "Apparition précoce";
-                    }
+            bool isFemale = patientGender.Equals("F", StringComparison.OrdinalIgnoreCase);
+            bool isMale   = patientGender.Equals("M", StringComparison.OrdinalIgnoreCase);
 
-                    break;
-                }
-                default:
-                    break;
+            if (isFemale)
+            {
+                if (countTriggers == 4) return "Danger";
+                if (countTriggers >= 7) return "Apparition précoce";
             }
+            else if (isMale)
+            {
+                if (countTriggers == 3) return "Danger";
+                if (countTriggers >= 5) return "Apparition précoce";
+            }
+
+            return "Aucun risque";
         }
-        else if (patientAge > 30)
+
+        // -----------------------------
+        //   Plus de 30 ans
+        // -----------------------------
+        if (patientAge > 30)
         {
-            switch (countTriggers)
+            return countTriggers switch
             {
-                case >=2 and <= 5:
-                    return "Risque limité";
-                case 6 or 7:
-                    return "Danger";
-                case >= 8:
-                    return "Apparition précoce";
-            }
+                >= 2 and <= 5 => "Risque limité",
+                6 or 7        => "Danger",
+                >= 8          => "Apparition précoce",
+                _             => "Aucun risque"
+            };
         }
 
+        // Cas âge == 30 : non défini → Aucun risque
         return "Aucun risque";
     }
+
 
     private static readonly string[] _terminologies =
     [
