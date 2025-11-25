@@ -81,6 +81,22 @@
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
+      "DownstreamPathTemplate": "/api/PatientNote/CreateRange",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientNoteHistoryWebapi",
+          "Port": 8088
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/api/PatientNote/CreateRange",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/PatientNote/Update/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

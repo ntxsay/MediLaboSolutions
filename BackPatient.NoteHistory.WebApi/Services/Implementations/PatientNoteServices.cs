@@ -120,6 +120,41 @@ public class PatientNoteServices : IPatientNoteServices
             return null;
         }
     }
+    
+    public async Task<PatientNoteDto[]> CreateRangeAsync(PatientNoteViewModel[] datas)
+    {
+        if (datas.Length == 0)
+        {
+            _logger.LogError("Le tableau de données est vide.");
+            return [];
+        }
+        if (datas.Any(a => string.IsNullOrEmpty(a.PatientName) || string.IsNullOrWhiteSpace(a.PatientName)))
+        {
+            _logger.LogError("Le nom du patient ne peut pas être null, vide ou ne contenir que des espaces blancs.");
+            return [];
+        }
+        
+        if (datas.Any(a => string.IsNullOrEmpty(a.Note) || string.IsNullOrWhiteSpace(a.Note)))
+        {
+            _logger.LogError("La note concernant le patient ne peut pas être null, vide ou ne contenir que des espaces blancs.");
+            return [];
+        }
+        
+        try
+        {
+            var entities = datas.Select(s => s.ConvertToEntity()).ToArray();
+
+            await _patientNotesCollection.InsertManyAsync(entities);
+            
+            _logger.LogInformation("Les notes patients ont été créées avec succès");
+            return entities.Select(s => s.ConvertToDto()).ToArray();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Une erreur est survenue lors de la création des notes patients");
+            return [];
+        }
+    }
 
     public async Task<PatientNoteDto?> UpdateAsync(string id, PatientNoteViewModel data)
     {

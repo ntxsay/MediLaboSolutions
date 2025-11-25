@@ -52,6 +52,24 @@ namespace BackPatient.NoteHistory.WebApi.Controllers
 
             return Ok(data);
         }
+        
+        [HttpPost("CreateRange")]
+        public async Task<IActionResult> CreateRangeAsync([FromBody] PatientNoteViewModel[] formDatas)
+        {
+            if (!ModelState.IsValid)
+            {
+                logger.LogError("Les données reçues pour la création de note patient ne sont pas valides.");
+                return BadRequest();
+            }
+            
+            var datas = await patientNoteServices.CreateRangeAsync(formDatas);
+            if (datas.Length == 0)
+            {
+                return BadRequest();
+            }
+
+            return Ok(datas);
+        }
 
         [HttpPut("Update/{id:length(24)}")]
         public async Task<IActionResult> UpdateAsync(string id, [FromBody] PatientNoteViewModel formData)

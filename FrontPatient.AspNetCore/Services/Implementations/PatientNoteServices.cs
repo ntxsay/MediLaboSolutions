@@ -63,6 +63,33 @@ public class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClien
         }
     }
     
+    public async Task<PatientNoteViewModel[]> CreateRangeAsync(PatientNoteViewModel[] values)
+    {
+        try
+        {
+            using var response = await _client.PostAsJsonAsync("PatientNote/CreateRange", values.Select(s => s.ToDto()).ToArray());
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Une erreur est survenue lors de la création de notes de patient : {response}", response.ReasonPhrase);
+                return [];
+            }
+            
+            var datas = await response.Content.ReadFromJsonAsync<PatientNoteDto[]>();
+            if (datas == null)
+            {
+                logger.LogWarning("Les notes patients n'ont pas été créées.");
+                return [];
+            }
+
+            return datas.Select(s => s.ToViewModel()).ToArray();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Une erreur est survenue lors de la création des notes patients.");
+            return [];
+        }
+    }
+    
     public void Dispose()
     {
         _client.Dispose();
