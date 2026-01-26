@@ -1,0 +1,2 @@
+CREATE DATABASE "DbPatient";
+CREATE DATABASE "DbAuth";
