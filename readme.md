@@ -115,6 +115,7 @@ docker-compose up frontPatientWebApp
 
 *Remarque : Si l'url de l'application est le suivant : http://0.0.0.0:8086/ vous devrez le remplacer par http://localhost:8086/*
 
+
 ## Sécurité
 
 L'utilisateur doit être authentifié pour utiliser l'application.
@@ -133,3 +134,8 @@ Ci-dessous les identifiants de l'utilisateur :
 
 - Nom d'utilisateur : **admin@mediclabo.fr**
 - Mot de passe : **P@ssword123**
+
+
+## En résumé:
+
+![image](Image1.png)
