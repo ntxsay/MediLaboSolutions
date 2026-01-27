@@ -1,5 +1,8 @@
 ﻿namespace BackPatient.NoteHistory.WebApi.Models;
 
+/// <summary>
+/// Configuration de la base de données MongoDB
+/// </summary>
 public class MediLaboSolutionsDatabaseSettings
 {
     public string ConnectionString { get; set; } = string.Empty;

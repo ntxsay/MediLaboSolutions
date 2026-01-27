@@ -5,7 +5,11 @@ using FrontPatient.AspNetCore.Utilities;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientNoteServices, IDisposable
+/// <summary>
+/// Service permettant de gérer les notes de patients
+/// </summary>
+/// <remarks>Ce service effectue des appels vers l'API BackPatient.NoteHistory.WebApi via le Gateway</remarks>
+public sealed class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientNoteServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     

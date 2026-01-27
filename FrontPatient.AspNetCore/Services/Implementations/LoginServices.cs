@@ -4,6 +4,12 @@ using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
+/// <summary>
+/// Service permettant de gérer la connexion d'un utilisateur
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="clientFactory"></param>
+/// <param name="configuration"></param>
 public sealed class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : ILoginServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:AuthorizedClientName"]!);

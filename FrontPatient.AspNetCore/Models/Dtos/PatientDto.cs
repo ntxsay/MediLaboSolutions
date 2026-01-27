@@ -1,14 +1,17 @@
 ﻿namespace FrontPatient.AspNetCore.Models.Dtos;
 
-public class PatientDto
+/// <summary>
+/// DTO représentant un patient et utilisé suite aux appels API
+/// </summary>
+public record PatientDto
 {
-    public int Id { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public DateOnly BirthDate { get; set; }
-    public string? PostalAddress { get; set; }
-    public string? NoTelephone { get; set; }
-    public int GenreId { get; set; }
-    public GenreDto Genre { get; set; } = null!;
-    public GenreDto[] Genres { get; set; } = [];
+    public required int Id { get; init; }
+    public required string FirstName { get; init; } = string.Empty;
+    public required string LastName { get; init; } = string.Empty;
+    public required DateOnly BirthDate { get; init; }
+    public required string? PostalAddress { get; init; }
+    public required string? NoTelephone { get; init; }
+    public required int GenreId { get; init; }
+    public required GenreDto Genre { get; init; } = null!;
+    public required GenreDto[] Genres { get; init; } = [];
 }

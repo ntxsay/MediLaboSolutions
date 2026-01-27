@@ -6,9 +6,7 @@ namespace OcelotGatewayApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(
-        ILogger<AuthController> logger,
-        ILoginServices loginServices)
+    public class AuthController(ILoginServices loginServices)
         : ControllerBase
     {
         /// <summary>

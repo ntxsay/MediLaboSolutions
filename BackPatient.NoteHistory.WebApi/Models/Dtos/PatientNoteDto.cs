@@ -1,9 +1,12 @@
 ﻿namespace BackPatient.NoteHistory.WebApi.Models.Dtos;
 
-public class PatientNoteDto
+/// <summary>
+/// Dto représentant une note de patient
+/// </summary>
+public record PatientNoteDto
 {
-    public string? Id { get; set; }
-    public int PatientId { get; set; }
-    public string PatientName { get; set; } = string.Empty;
-    public string Note { get; set; } = string.Empty;
+    public required string? Id { get; init; }
+    public required int PatientId { get; init; }
+    public required string PatientName { get; init; } = string.Empty;
+    public required string Note { get; init; } = string.Empty;
 }

@@ -5,7 +5,13 @@ using FrontPatient.AspNetCore.Utilities;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory clientFactory) : IGenreServices, IDisposable
+/// <summary>
+/// Service permettant de gérer les genres (Féminin/Masculin) de patients.
+/// </summary>
+/// <remarks>Ce service effectue des appels vers l'API BackPatient.WebApi via le Gateway</remarks>
+/// <param name="logger"></param>
+/// <param name="clientFactory"></param>
+public sealed class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory clientFactory) : IGenreServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient("GatewayClient");
     
@@ -114,33 +120,6 @@ public class GenreServices(ILogger<GenreServices> logger, IHttpClientFactory cli
         {
             logger.LogError(ex, "Une erreur est survenue lors de la mise à jour du genre");
             return null;
-        }
-    }
-    
-    public async Task<bool> DeleteAsync(int id)
-    {
-        try
-        {
-            using var response = await _client.DeleteAsync($"genre/Delete/{id}");
-            if (!response.IsSuccessStatusCode)
-            {
-                logger.LogWarning("Une erreur est survenue lors de la suppression du genre : {response}", response.ReasonPhrase);
-                return false;              
-            }
-            
-            var data = await response.Content.ReadFromJsonAsync<bool>();
-            if (!data)
-            {
-                logger.LogWarning("Une erreur est survenue lors de la suppression du genre");
-                return false;
-            }
-            
-            return true;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Une erreur est survenue lors de la suppression du genre.");
-            return false;
         }
     }
     

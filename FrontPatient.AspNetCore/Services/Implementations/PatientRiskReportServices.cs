@@ -3,7 +3,11 @@ using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class PatientRiskReportServices(ILogger<PatientRiskReportServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientRiskReportServices, IDisposable
+/// <summary>
+/// Service permettant de gérer les rapports de risques de patients
+/// </summary>
+/// <remarks>Ce service effectue des appels vers l'API BackPatient.RiskAnticipation.WebApi via le Gateway</remarks>
+public sealed class PatientRiskReportServices(ILogger<PatientRiskReportServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientRiskReportServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
 

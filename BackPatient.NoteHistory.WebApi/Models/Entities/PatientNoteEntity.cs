@@ -3,6 +3,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackPatient.NoteHistory.WebApi.Models.Entities;
 
+/// <summary>
+/// Entité représentant une note de patient pour une base de données MongoDB 
+/// </summary>
 public class PatientNoteEntity
 {
     [BsonId]

@@ -1,10 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FrontPatient.AspNetCore.Models.Dtos;
 
-public class GenreDto
+/// <summary>
+/// DTO représentant un genre et utilisé suite aux appels API 
+/// </summary>
+public record GenreDto
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public required int Id { get; init; }
+    public required string Name { get; init; } = string.Empty;
+    public required string? Description { get; init; }
 }

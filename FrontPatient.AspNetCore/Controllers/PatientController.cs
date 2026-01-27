@@ -80,7 +80,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
             return NotFound();
         }
 
-        var viewModel = await patientServices.UpdateAsync(id.Value);
+        var viewModel = await patientServices.GetAsync(id.Value);
         if (viewModel == null)
         {
             logger.LogWarning("Le patient avec l'ID {Id} n'a pas été trouvé pour l'édition.", id);
@@ -121,7 +121,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
     [HttpGet("Patient/Observations/{patientId:int}")]
     public async Task<IActionResult> Observations(int patientId)
     {
-        var patient = await patientServices.DetailAsync(patientId);
+        var patient = await patientServices.GetAsync(patientId);
         if (patient == null)
         {
             logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
@@ -144,7 +144,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
     [HttpGet("Create-Observation/{patientId:int}")]
     public async Task<IActionResult> CreateObservation(int patientId)
     {
-        var patient = await patientServices.DetailAsync(patientId);
+        var patient = await patientServices.GetAsync(patientId);
         if (patient == null)
         {
             logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
@@ -173,7 +173,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         if (!ModelState.IsValid)
         {
             logger.LogError("Les données reçues pour la création de la note du patient n°{patientId} ne sont pas valides.", patientId);
-            var patient = await patientServices.DetailAsync(patientId);
+            var patient = await patientServices.GetAsync(patientId);
             if (patient == null)
             {
                 logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);
@@ -194,7 +194,7 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         if (data == null)
         {
             logger.LogWarning("Le patient n'a pas été créé.");
-            var patient = await patientServices.DetailAsync(patientId);
+            var patient = await patientServices.GetAsync(patientId);
             if (patient == null)
             {
                 logger.LogWarning("Le patient n°{patientId} n'a pas été trouvé.", patientId);

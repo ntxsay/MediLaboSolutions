@@ -2,6 +2,10 @@
 
 namespace BackPatient.RiskAnticipation.WebApi.Handlers;
 
+/// <summary>
+/// Composant permettant de récupérer le token d'authentification soit dans le header, soit dans le cookie et de le mettre dans la requête
+/// </summary>
+/// <param name="accessor">Contient les informations de la requête en cours</param>
 public class AuthTokenHandler(IHttpContextAccessor accessor) : DelegatingHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

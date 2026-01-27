@@ -1,7 +1,10 @@
 ﻿namespace BackPatient.RiskAnticipation.WebApi.Models.Dtos;
 
-public class PatientRiskReportDto
+/// <summary>
+/// Dto représentant un rapport de risque d'un patient
+/// </summary>
+public record PatientRiskReportDto
 {
-    public int PatientId { get; set; }
-    public string Report { get; set; } = string.Empty;
+    public required int PatientId { get; init; }
+    public required string Report { get; init; } = string.Empty;
 }

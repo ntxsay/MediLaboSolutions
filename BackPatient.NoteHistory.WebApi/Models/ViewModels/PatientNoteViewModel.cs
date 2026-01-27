@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BackPatient.NoteHistory.WebApi.Models.ViewModels;
 
+/// <summary>
+/// Modèle de vue pour le formulaire d'édition d'une note de patient 
+/// </summary>
 public class PatientNoteViewModel
 {
     [ValidateNever]

@@ -5,7 +5,11 @@ using FrontPatient.AspNetCore.Utilities;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientServices, IDisposable
+/// <summary>
+/// Service permettant de gérer les patients
+/// </summary>
+/// <remarks>Ce service effectue des appels vers l'API BackPatient.WebApi via le Gateway</remarks>
+public sealed class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     
@@ -36,7 +40,7 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
         }
     }
     
-    public async Task<PatientViewModel?> DetailAsync(int id)
+    public async Task<PatientViewModel?> GetAsync(int id)
     {
         try
         {
@@ -117,32 +121,6 @@ public class PatientServices(ILogger<PatientServices> logger, IHttpClientFactory
         }
     }
     
-    public async Task<PatientViewModel?> UpdateAsync(int id)
-    {
-        try
-        {
-            using var response = await _client.GetAsync($"patient/Get/{id}");
-            if (!response.IsSuccessStatusCode)
-            {
-                logger.LogWarning("Une erreur est survenue lors de la récupération du patient : {response}", response.ReasonPhrase);
-                return null;
-            }
-            
-            var data = await response.Content.ReadFromJsonAsync<PatientDto>();
-            if (data == null)
-            {
-                logger.LogWarning("La patient n'a pas été trouvé.");
-                return null;
-            }
-
-            return data.ToViewModel();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Une erreur est survenue lors de la récupération du patient");
-            return null;
-        }
-    }
     
     public async Task<PatientViewModel?> UpdateAsync(int id, PatientViewModel value)
     {

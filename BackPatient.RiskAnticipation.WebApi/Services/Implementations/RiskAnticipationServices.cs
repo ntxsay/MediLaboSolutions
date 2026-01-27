@@ -1,11 +1,20 @@
 ﻿using BackPatient.RiskAnticipation.WebApi.Models.Dtos;
+using BackPatient.RiskAnticipation.WebApi.Services.Interfaces;
 
 namespace BackPatient.RiskAnticipation.WebApi.Services.Implementations;
 
-public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IRiskAnticipationServices, IDisposable
+/// <summary>
+/// Service permettant de générer un rapport de risque pour un patient
+/// </summary>
+public sealed class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IRiskAnticipationServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
     
+    /// <summary>
+    /// Récupère les informations d'un patient pour l'évaluation du risque
+    /// </summary>
+    /// <param name="patientId">L'id du patient</param>
+    /// <returns>Si les informations sont trouvées, retourne un PatientReportInfoDto, sinon null</returns>
     private async Task<PatientReportInfoDto?> GetPatientRiskInfoAsync(int patientId)
     {
         try
@@ -33,6 +42,11 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
         }
     }
     
+    /// <summary>
+    /// Récupère les notes d'un patient pour l'évaluation du risque
+    /// </summary>
+    /// <param name="patientId">L'id du patient</param>
+    /// <returns>Si les notes sont trouvées, retourne un tableau de string, sinon un tableau vide</returns>
     private async Task<string[]> GetPatientNoteAsync(int patientId)
     {
         try
@@ -79,44 +93,42 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
     
     private string GenerateRiskReport(byte patientAge, string patientGender, string[] patientNotes)
     {
-        // Calcul des occurrences de triggers
-        int countTriggers = patientNotes
-            .Sum(note => _terminologies.Count(t => 
+        // Calcule la somme du nombre de terminologies trouvées par note
+        var numberOfTerminologyFounded = patientNotes
+            .Sum(note => Terminologies.Count(t => 
                 note.Contains(t, StringComparison.OrdinalIgnoreCase)));
 
-        logger.LogInformation("count triggers : {count}", countTriggers);
+        logger.LogInformation("Nombre total de terminologies trouvées : {count}", numberOfTerminologyFounded);
 
-        if (countTriggers == 0)
+        if (numberOfTerminologyFounded == 0)
             return "Aucun risque";
 
-        // -----------------------------
-        //   Moins de 30 ans
-        // -----------------------------
+        // calcul pour les moins de 30 ans
         if (patientAge < 30)
         {
-            bool isFemale = patientGender.Equals("F", StringComparison.OrdinalIgnoreCase);
-            bool isMale   = patientGender.Equals("M", StringComparison.OrdinalIgnoreCase);
+            var isFemale = patientGender.Equals("F", StringComparison.OrdinalIgnoreCase);
+            var isMale   = patientGender.Equals("M", StringComparison.OrdinalIgnoreCase);
 
             if (isFemale)
             {
-                if (countTriggers == 4) return "Danger";
-                if (countTriggers >= 7) return "Apparition précoce";
+                if (numberOfTerminologyFounded == 4) 
+                    return "Danger";
+                if (numberOfTerminologyFounded >= 7) 
+                    return "Apparition précoce";
             }
             else if (isMale)
             {
-                if (countTriggers == 3) return "Danger";
-                if (countTriggers >= 5) return "Apparition précoce";
+                if (numberOfTerminologyFounded == 3) return "Danger";
+                if (numberOfTerminologyFounded >= 5) return "Apparition précoce";
             }
 
             return "Aucun risque";
         }
 
-        // -----------------------------
-        //   Plus de 30 ans
-        // -----------------------------
+        // calcul pour les plus de 30 ans
         if (patientAge > 30)
         {
-            return countTriggers switch
+            return numberOfTerminologyFounded switch
             {
                 >= 2 and <= 5 => "Risque limité",
                 6 or 7        => "Danger",
@@ -125,12 +137,12 @@ public class RiskAnticipationServices(ILogger<RiskAnticipationServices> logger, 
             };
         }
 
-        // Cas âge == 30 : non défini → Aucun risque
+        // pour les personnes ayant 30 ans, le cas n'est pas défini donc du coup on retourne "Aucun risque"
         return "Aucun risque";
     }
 
 
-    private static readonly string[] _terminologies =
+    private static readonly string[] Terminologies =
     [
         "Hémoglobine A1C",
         "Microalbumine",

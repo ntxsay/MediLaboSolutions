@@ -1,6 +1,7 @@
 using BackPatient.RiskAnticipation.WebApi.Handlers;
 using BackPatient.RiskAnticipation.WebApi.Services;
 using BackPatient.RiskAnticipation.WebApi.Services.Implementations;
+using BackPatient.RiskAnticipation.WebApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 

@@ -1,4 +1,5 @@
 using BackPatient.RiskAnticipation.WebApi.Services;
+using BackPatient.RiskAnticipation.WebApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackPatient.RiskAnticipation.WebApi.Controllers

@@ -2,12 +2,17 @@
 using BackPatient.NoteHistory.WebApi.Models.Dtos;
 using BackPatient.NoteHistory.WebApi.Models.Entities;
 using BackPatient.NoteHistory.WebApi.Models.ViewModels;
+using BackPatient.NoteHistory.WebApi.Services.Interfaces;
 using BackPatient.NoteHistory.WebApi.Utilities;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackPatient.NoteHistory.WebApi.Services.Implementations;
 
+
+/// <summary>
+/// Service permettant de gérer les notes de patients
+/// </summary>
 public class PatientNoteServices : IPatientNoteServices
 {
     private readonly IMongoCollection<PatientNoteEntity> _patientNotesCollection;
