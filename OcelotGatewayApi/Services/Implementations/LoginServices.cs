@@ -4,14 +4,16 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using OcelotGatewayApi.Models.Dtos;
+using OcelotGatewayApi.Services.Interfaces;
 
-namespace OcelotGatewayApi.Services;
+namespace OcelotGatewayApi.Services.Implementations;
 
-public interface ILoginServices
-{
-    Task<TokenDto?> LoginAsync(LoginDto value);
-}
-
+/// <summary>
+/// Service permettant de gérer la connexion des utilisateurs.
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="userManager"></param>
+/// <param name="configuration"></param>
 public class LoginServices(ILogger<LoginServices> logger, UserManager<IdentityUser> userManager, IConfiguration configuration) : ILoginServices
 {
     public async Task<TokenDto?> LoginAsync(LoginDto value)
@@ -44,12 +46,6 @@ public class LoginServices(ILogger<LoginServices> logger, UserManager<IdentityUs
                 new (ClaimTypes.NameIdentifier, user.Id)
             };
 
-            /*var userRoles = await userManager.GetRolesAsync(user);
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }*/
-
             var token = GetToken(authClaims);
             
             logger.LogInformation("Token généré pour l'utilisateur {UserName}.", value.UserName);
@@ -68,7 +64,7 @@ public class LoginServices(ILogger<LoginServices> logger, UserManager<IdentityUs
     }
     
     /// <summary>
-    /// Crée et retourne un token JWT
+    /// Génère et retourne un token JWT
     /// </summary>
     /// <param name="authClaims"></param>
     /// <returns></returns>

@@ -2,6 +2,9 @@
 
 namespace FrontPatient.AspNetCore.Attributes;
 
+/// <summary>
+/// Attribut de validation permettant de vérifier que la date est comprise entre une date minimum et une date maximum
+/// </summary>
 public class DateValidationAttribute(string minimumDate, string maximumDate) : ValidationAttribute
 {
     public string MinimumDate { get; } = minimumDate;

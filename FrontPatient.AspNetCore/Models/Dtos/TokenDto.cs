@@ -1,7 +1,10 @@
 ﻿namespace FrontPatient.AspNetCore.Models.Dtos;
 
-public class TokenDto
+/// <summary>
+/// Dto permettant de retourner le token et sa date d'expiration depuis la requête de connexion de l'utilisateur
+/// </summary>
+public record TokenDto
 {
-    public string? Token { get; set; }
-    public DateTime? Expiration { get; set; }
+    public required string? Token { get; init; }
+    public required DateTime? Expiration { get; init; }
 }

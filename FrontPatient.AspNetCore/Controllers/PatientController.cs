@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FrontPatient.AspNetCore.Models;
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Services;
+using FrontPatient.AspNetCore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FrontPatient.AspNetCore.Controllers;
@@ -10,6 +11,10 @@ namespace FrontPatient.AspNetCore.Controllers;
 [Authorize]
 public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices, IPatientRiskReportServices patientRiskReportServices) : Controller
 {
+    /// <summary>
+    /// Affiche la liste des patients.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -17,6 +22,10 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return View(patients);
     }
     
+    /// <summary>
+    /// Affiche la page de création d'un patient.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Create()
     {
@@ -29,6 +38,11 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return View(viewModel);
     }
     
+    /// <summary>
+    /// Crée un patient.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(PatientViewModel value)
@@ -52,6 +66,11 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return RedirectToAction(nameof(Index));
     }
     
+    /// <summary>
+    /// Affiche la page de mise à jour d'un patient.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> Update(int? id)
     {
@@ -71,6 +90,12 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return View(viewModel);
     }
     
+    /// <summary>
+    /// Met à jour le patient spécifié.
+    /// </summary>
+    /// <param name="id">Id du patient à mettre à jour</param>
+    /// <param name="value">Données du patient à mettre à jour</param>
+    /// <returns></returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(int id, PatientViewModel value)
@@ -88,6 +113,11 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return RedirectToAction(nameof(Index));
     }
     
+    /// <summary>
+    /// Affiche la page des observations du patient spécifié.
+    /// </summary>
+    /// <param name="patientId">Id du patient</param>
+    /// <returns></returns>
     [HttpGet("Patient/Observations/{patientId:int}")]
     public async Task<IActionResult> Observations(int patientId)
     {
@@ -106,6 +136,11 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         return View(notes);
     }
     
+    /// <summary>
+    /// Affiche la page de création d'une observation du patient spécifié.
+    /// </summary>
+    /// <param name="patientId">Id du patient</param>
+    /// <returns></returns>
     [HttpGet("Create-Observation/{patientId:int}")]
     public async Task<IActionResult> CreateObservation(int patientId)
     {
@@ -125,6 +160,12 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
         });
     }
     
+    /// <summary>
+    /// Crée une observation du patient spécifié.
+    /// </summary>
+    /// <param name="patientId"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
     [HttpPost("Create-Observation/{patientId:int}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateObservation(int patientId, PatientNoteViewModel value)

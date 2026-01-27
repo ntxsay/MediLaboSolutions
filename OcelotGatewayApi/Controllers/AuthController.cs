@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using OcelotGatewayApi.Models.Dtos;
-using OcelotGatewayApi.Services;
+using OcelotGatewayApi.Services.Interfaces;
 
 namespace OcelotGatewayApi.Controllers
 {
@@ -11,12 +11,11 @@ namespace OcelotGatewayApi.Controllers
         ILoginServices loginServices)
         : ControllerBase
     {
-        [HttpGet("Log")]
-        public IActionResult GetHelloWorld()
-        {
-            return Ok("Hello world");
-        }
-        
+        /// <summary>
+        /// Authentifie un utilisateur et retourne un token JWT.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {

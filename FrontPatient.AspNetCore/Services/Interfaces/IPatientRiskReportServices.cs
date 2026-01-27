@@ -1,4 +1,4 @@
-﻿namespace FrontPatient.AspNetCore.Services;
+﻿namespace FrontPatient.AspNetCore.Services.Interfaces;
 
 public interface IPatientRiskReportServices
 {

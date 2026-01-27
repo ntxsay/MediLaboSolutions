@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FrontPatient.AspNetCore.Models.ViewModels;
 
+/// <summary>
+/// Modèle de vue pour le formulaire de création et d'édition d'un patient
+/// </summary>
 public class PatientViewModel
 {
     [ValidateNever]

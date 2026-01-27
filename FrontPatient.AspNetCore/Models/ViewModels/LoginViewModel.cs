@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FrontPatient.AspNetCore.Models.ViewModels;
 
+/// <summary>
+/// Modèle de vue pour le formulaire de connexion
+/// </summary>
 public class LoginViewModel
 {
     [DisplayName("Nom d'utilisateur")]

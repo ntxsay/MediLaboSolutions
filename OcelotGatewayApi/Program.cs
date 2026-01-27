@@ -1,14 +1,14 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using OcelotGatewayApi.Data;
 using OcelotGatewayApi.Data.Seeders;
-using OcelotGatewayApi.Services;
+using OcelotGatewayApi.Services.Implementations;
+using OcelotGatewayApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +78,8 @@ app.UseRouting();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Configuration des endpoints afin d'éviter que les appels des Contrôleurs soient ignorés lors des demandes d'authentification
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

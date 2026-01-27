@@ -1,4 +1,5 @@
 ﻿using FrontPatient.AspNetCore.Services;
+using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Datas;
 

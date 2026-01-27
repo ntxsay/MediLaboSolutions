@@ -1,9 +1,10 @@
 ﻿using FrontPatient.AspNetCore.Models.Dtos;
 using FrontPatient.AspNetCore.Models.ViewModels;
+using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : ILoginServices, IDisposable
+public sealed class LoginServices(ILogger<LoginServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : ILoginServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:AuthorizedClientName"]!);
     

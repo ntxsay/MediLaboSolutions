@@ -3,6 +3,7 @@ using FrontPatient.AspNetCore.Services;
 using Microsoft.AspNetCore.Localization;
 using FrontPatient.AspNetCore.Handlers;
 using FrontPatient.AspNetCore.Services.Implementations;
+using FrontPatient.AspNetCore.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("fr-FR");
@@ -40,11 +41,13 @@ builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:GatewayClien
         };
     }).AddHttpMessageHandler<AuthTokenHandler>();
 
+//Ajout du client http pour appeler le controller AuthController du projet OcelotGatewayApi permettant la gestion de l'authentification de l'utilisateur
 builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:AuthorizedClientName"]!, client =>
 {
     client.BaseAddress = new Uri("http://ocelotWebapi:8084/api/auth/");
 });
     
+//Force la culture française dans l'application 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[]

@@ -1,4 +1,5 @@
 ﻿using FrontPatient.AspNetCore.Models.ViewModels;
+using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 

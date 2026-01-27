@@ -1,5 +1,6 @@
 ﻿using FrontPatient.AspNetCore.Models.Dtos;
 using FrontPatient.AspNetCore.Models.ViewModels;
+using FrontPatient.AspNetCore.Services.Interfaces;
 using FrontPatient.AspNetCore.Utilities;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;

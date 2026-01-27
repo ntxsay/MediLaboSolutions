@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Services;
+using FrontPatient.AspNetCore.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;

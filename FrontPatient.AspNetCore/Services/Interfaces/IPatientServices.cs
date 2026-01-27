@@ -1,6 +1,6 @@
 ﻿using FrontPatient.AspNetCore.Models.ViewModels;
 
-namespace FrontPatient.AspNetCore.Services;
+namespace FrontPatient.AspNetCore.Services.Interfaces;
 
 public interface IPatientServices
 {
