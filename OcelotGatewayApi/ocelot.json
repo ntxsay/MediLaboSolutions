@@ -49,6 +49,22 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/PatientNote/GetMinimalByPatientIds",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "backPatientNoteHistoryWebapi",
+          "Port": 8088
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "UpstreamPathTemplate": "/api/PatientNote/GetMinimalByPatientIds",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/PatientNote/GetByPatientId/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

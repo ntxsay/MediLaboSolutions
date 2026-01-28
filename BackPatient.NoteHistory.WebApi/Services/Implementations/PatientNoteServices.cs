@@ -73,6 +73,27 @@ public class PatientNoteServices : IPatientNoteServices
             return [];
         }
     }
+    
+    public async Task<PatientNoteMinimalDto[]> GetAllMinimalByPatientIdsAsync(int[] patientIds)
+    {
+        if (patientIds.Length == 0)
+        {
+            _logger.LogError("Aucun id de patient n'est fourni pour retourner les notes.");
+            return [];
+        }
+        
+        try
+        {
+            var datas =  await _patientNotesCollection.Find(x => 
+                patientIds.Contains(x.PatientId)).ToListAsync();
+            return datas.Select(s => s.ConvertToMinimalDto()).ToArray();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Une erreur est survenue lors de la récupération des notes");
+            return [];
+        }
+    }
 
     public async Task<PatientNoteDto?> GetAsync(string id)
     {

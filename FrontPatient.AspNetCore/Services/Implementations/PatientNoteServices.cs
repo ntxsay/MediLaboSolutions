@@ -12,6 +12,42 @@ namespace FrontPatient.AspNetCore.Services.Implementations;
 public sealed class PatientNoteServices(ILogger<PatientNoteServices> logger, IHttpClientFactory clientFactory, IConfiguration configuration) : IPatientNoteServices, IDisposable
 {
     private readonly HttpClient _client = clientFactory.CreateClient(configuration["MyHttpClients:GatewayClientName"]!);
+
+    public async Task<PatientNoteMinimalDto[]> GetMinimalNotesByPatientIds(int[] patientIds)
+    {
+        if (patientIds.Length == 0)
+        {
+            logger.LogWarning("Aucun id de patient n'a été fourni pour retourner des notes.");
+            return [];
+        }
+        
+        var patientIdsStrings = string.Join(",", patientIds);
+        
+        try
+        {
+            using var response = await _client.GetAsync($"PatientNote/GetMinimalByPatientIds?{string.Join("&", patientIds.Select(s => $"patientIds={s}"))}");
+            if (!response.IsSuccessStatusCode)
+            {
+                logger.LogWarning("Une erreur est survenue lors de la récupération des notes des patients n°{patientIds} : {response}", patientIdsStrings, response.ReasonPhrase);
+                return [];
+            }
+            
+            var datas = await response.Content.ReadFromJsonAsync<PatientNoteMinimalDto[]>();
+            if (datas == null)
+            {
+                logger.LogWarning("Les notes des patients n°{patientIds} n'ont pas été trouvés.", patientIdsStrings);
+                return [];  
+            }
+
+            return datas.ToArray();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, 
+                "Une erreur est survenue lors de la récupération des notes des patients n°{ids}", patientIdsStrings);
+            return [];
+        }
+    }
     
     public async Task<PatientNoteViewModel[]> GetAllByPatientIdAsync(int id)
     {

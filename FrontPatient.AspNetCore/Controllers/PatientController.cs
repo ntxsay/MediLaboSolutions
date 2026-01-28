@@ -1,15 +1,23 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using FrontPatient.AspNetCore.Models;
+using FrontPatient.AspNetCore.Models.Settings;
 using FrontPatient.AspNetCore.Models.ViewModels;
 using FrontPatient.AspNetCore.Services;
 using FrontPatient.AspNetCore.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 
 namespace FrontPatient.AspNetCore.Controllers;
 
 [Authorize]
-public class PatientController(ILogger<PatientController> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices, IPatientRiskReportServices patientRiskReportServices) : Controller
+public class PatientController(
+    ILogger<PatientController> logger,
+    IPatientServices patientServices,
+    IPatientNoteServices patientNoteServices,
+    IPatientRiskReportServices patientRiskReportServices,
+    IPatientNoteSeedServices patientNoteSeedServices,
+    IOptions<SeederSettings> seederSettings) : Controller
 {
     /// <summary>
     /// Affiche la liste des patients.
@@ -19,6 +27,13 @@ public class PatientController(ILogger<PatientController> logger, IPatientServic
     public async Task<IActionResult> Index()
     {
         var patients = await patientServices.GetAllAsync();
+        
+        if (seederSettings.Value.SeedPatientNotes)
+        {
+            var dictionary = patients.ToDictionary(k => k.LastName, v => v.Id);
+            await patientNoteSeedServices.SeedNotesAsync(dictionary);
+        }
+        
         return View(patients);
     }
     

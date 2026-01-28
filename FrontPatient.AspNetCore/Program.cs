@@ -1,7 +1,7 @@
 using System.Globalization;
-using FrontPatient.AspNetCore.Services;
 using Microsoft.AspNetCore.Localization;
 using FrontPatient.AspNetCore.Handlers;
+using FrontPatient.AspNetCore.Models.Settings;
 using FrontPatient.AspNetCore.Services.Implementations;
 using FrontPatient.AspNetCore.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -67,6 +67,9 @@ builder.Services.AddScoped<IPatientNoteServices, PatientNoteServices>();
 builder.Services.AddScoped<IPatientNoteSeedServices, PatientNoteSeedServices>();
 builder.Services.AddScoped<IPatientRiskReportServices, PatientRiskReportServices>();
 
+builder.Services.Configure<SeederSettings>(
+    builder.Configuration.GetSection("Seeders"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -76,6 +79,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseRouting();

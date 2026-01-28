@@ -3,27 +3,56 @@ using FrontPatient.AspNetCore.Services.Interfaces;
 
 namespace FrontPatient.AspNetCore.Services.Implementations;
 
-public class PatientNoteSeedServices(ILogger<PatientNoteSeedServices> logger, IPatientServices patientServices, IPatientNoteServices patientNoteServices) : IPatientNoteSeedServices
+/// <summary>
+/// Service permettant de peupler la base de données de notes de patients
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="patientNoteServices"></param>
+public class PatientNoteSeedServices(ILogger<PatientNoteSeedServices> logger, IPatientNoteServices patientNoteServices) : IPatientNoteSeedServices
 {
-    public async Task SeedNotesAsync()
+    public async Task SeedNotesAsync(Dictionary<string, int> patientLastNameIdDictionary)
     {
-        var allPatientDictionary = (await patientServices.GetAllAsync())
-            .ToDictionary(k => k.LastName, v => v.Id);
-        if (allPatientDictionary.Count > 0)
+        if (patientLastNameIdDictionary.Count > 0)
         {
+            var currentMinimalNotes = await patientNoteServices.GetMinimalNotesByPatientIds(patientLastNameIdDictionary.Values.ToArray());
             var listModel = new List<PatientNoteViewModel>();
-            foreach (var patient in _seedDictionary)
+            foreach (var seedPatientNameNotes in _seedDictionary)
             {
-                if (allPatientDictionary.TryGetValue(patient.Key, out var patientId))
+                if (!patientLastNameIdDictionary.TryGetValue(seedPatientNameNotes.Key, out var patientId)) 
+                    continue;
+                
+                //Retourne les notes existantes du patient, les comparent avec les notes à insérer et ajoute les notes manquantes
+                var currentNotes = currentMinimalNotes.Where(w => w.PatientId == patientId)
+                    .Select(s => s.Note)
+                    .ToArray();
+                
+                if (currentNotes.Length > 0)
                 {
-                    listModel.AddRange(patient.Value.Select(s => new PatientNoteViewModel()
-                    {
-                        Id = null,
-                        Note = s,
-                        PatientId = patientId,
-                        PatientName =  patient.Key
-                    }));
+                    var notExitingNoteData = seedPatientNameNotes.Value
+                        .Except(currentNotes, StringComparer.OrdinalIgnoreCase).Select(s => new PatientNoteViewModel()
+                        {
+                            Id = null,
+                            Note = s,
+                            PatientId = patientId,
+                            PatientName =  seedPatientNameNotes.Key
+                        }).ToArray();
+
+                    if (notExitingNoteData.Length > 0)
+                        listModel.AddRange(notExitingNoteData);
+                    else
+                        logger.LogInformation("Aucune note manquante pour le patient {patientName}",
+                            seedPatientNameNotes.Key);
+
+                    continue;
                 }
+
+                listModel.AddRange(seedPatientNameNotes.Value.Select(s => new PatientNoteViewModel()
+                {
+                    Id = null,
+                    Note = s,
+                    PatientId = patientId,
+                    PatientName =  seedPatientNameNotes.Key
+                }));
             }
             
             if (listModel.Count > 0)
@@ -36,11 +65,15 @@ public class PatientNoteSeedServices(ILogger<PatientNoteSeedServices> logger, IP
             }
             else
             {
-                logger.LogWarning("Aucune correspondance trouvée pour l'insertion des données de seed.");
+                logger.LogInformation("Aucune correspondance trouvée pour l'insertion des données de seed.");
             }
         }
     }
+    
 
+    /// <summary>
+    /// Dictionnaire contenant les notes de patients à insérer. La clé est le nom du patient et la valeur est le tableau de notes.
+    /// </summary>
     private readonly Dictionary<string, string[]> _seedDictionary =
         new(StringComparer.OrdinalIgnoreCase)
         {

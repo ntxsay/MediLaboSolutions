@@ -27,6 +27,13 @@ public interface IPatientNoteServices
     /// <param name="patientId"></param>
     /// <returns></returns>
     public Task<PatientNoteMinimalDto[]> GetAllMinimalByPatientIdAsync(int patientId);
+
+    /// <summary>
+    /// Retourne toutes les notes de plusieurs patients spécifiques, contenant juste l'id du patient et la note
+    /// </summary>
+    /// <param name="patientIds"></param>
+    /// <returns></returns>
+    public Task<PatientNoteMinimalDto[]> GetAllMinimalByPatientIdsAsync(int[] patientIds);
     
     /// <summary>
     /// Retourne une note spécifique

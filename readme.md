@@ -14,6 +14,7 @@ Développer une solution en microservices avec Docker, ASP.NET Core 9, PostgreSQ
 ## Lancement des services 
 
 Ce projet utilise Docker-Compose pour la gestion des conteneurs et des services.
+
 Présentation et lancement des services par ordre d'importance :
 
 ### 1. postgresBackPatient (Base de données)
@@ -25,7 +26,7 @@ Il utilise le fichier **db-init\init-multiple-db.sql** pour créer les bases de 
 docker-compose up postgresBackPatient
 ```
 
-*Remarque: Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
+*Remarque : Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
 
 ### 2. mongoNotesPatient (Base de données)
 Base de données (MongoDb) dédié du conteneur **backPatientNoteHistoryWebapi**
@@ -34,7 +35,7 @@ Base de données (MongoDb) dédié du conteneur **backPatientNoteHistoryWebapi**
 docker-compose up mongoNotesPatient
 ```
 
-*Remarque: Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
+*Remarque : Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
 
 
 ### 3. mongoNotesPatientExpress (Outils de gestion de base de données)
@@ -44,7 +45,7 @@ Interface MongoDB Express pour la gestion de la base de données MongoDB
 docker-compose up mongoNotesPatientExpress
 ```
 
-*Remarque: Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
+*Remarque : Docker peut démarrer automatiquement ce conteneur à son lancement, pensez à vérifier avant de lancer la commande.*
 
 
 ### 4. backPatientWebapi (Service Web)
@@ -78,7 +79,7 @@ Projet d'API web en ASP.NET Core 9 : **BackPatient.RiskAnticipation.WebApi**.
 
 Ce microservice expose des endpoints REST pour anticiper le niveau de risque qu’un patient développe du diabète.
 
-Il interroge les 2 autres microservices (gestion du patient et gestion de notes) pour calculer et générer le niveau de risque du patient.
+Il interroge les deux autres microservices (gestion du patient et gestion de notes) pour calculer et générer le niveau de risque du patient.
 
 Pour ce projet, docker devra d'abord construire l'image du projet avant de lancer le conteneur.
 

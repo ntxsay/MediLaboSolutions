@@ -36,6 +36,15 @@ public class PatientNoteController(IPatientNoteServices patientNoteServices, ILo
     [HttpGet("GetMinimalByPatientId/{id:int}")]
     public async Task<ActionResult<PatientNoteMinimalDto[]>> GetAllMinimalByPatientIdAsync(int id) =>
         Ok(await patientNoteServices.GetAllMinimalByPatientIdAsync(id));
+    
+    /// <summary>
+    /// Retourne toutes les notes de plusieurs patients spécifiques, contenant juste l'id du patient et la note
+    /// </summary>
+    /// <param name="patientIds"></param>
+    /// <returns></returns>
+    [HttpGet("GetMinimalByPatientIds")]
+    public async Task<ActionResult<PatientNoteMinimalDto[]>> GetAllMinimalByPatientIdsAsync([FromQuery] int[] patientIds) =>
+        Ok(await patientNoteServices.GetAllMinimalByPatientIdsAsync(patientIds));
 
     /// <summary>
     /// Retourne une note spécifique
