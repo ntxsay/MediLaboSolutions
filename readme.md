@@ -136,7 +136,19 @@ Ci-dessous les identifiants de l'utilisateur :
 - Nom d'utilisateur : **admin@mediclabo.fr**
 - Mot de passe : **P@ssword123**
 
+## Green Code
 
-## En résumé:
+Voici quelques recommendations green code pour le projet :
 
-![image](Image1.png)
+- Mettre en cache les données,
+- Ne récupérer que les données nécessaires
+- Éviter de prévoir trop de cas extrêmes inutiles et respecter le principe de responsabilité unique permet de garder un code plus simple, plus performant et moins énergivore.
+- Ne pas retenir les fonctionnalités non essentielles
+- Optimiser les requêtes aux bases de données (index)
+- Choisir les technologies les plus adaptées
+
+
+
+## Maquette:
+
+![image](Medicalo.png)
