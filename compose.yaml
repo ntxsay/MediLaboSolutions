@@ -28,8 +28,6 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:8084
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbAuth;"
-    volumes:
-      - ./OcelotGatewayApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
   #Projet BackPatient RiskAnticipation
   backPatientRiskAnticipationWebapi:
@@ -67,8 +65,6 @@ services:
       ASPNETCORE_URLS: http://0.0.0.0:8082
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: "Server=postgresBackPatient;Port=5432;User Id=postgres;Password=P@ssword1234;Database=DbPatient;"
-    volumes:
-      - ./BackPatient.WebApi/aspnetapp.pfx:/https/aspnetapp.pfx:ro
   
   #Base de données MongoDB
   mongoNotesPatient:

@@ -70,3 +70,17 @@ docker-compose down -v frontPatientWebApp
 docker-compose build frontPatientWebApp
 docker-compose up frontPatientWebApp
 ```
+
+## Tout démarrer
+
+```
+docker-compose build backPatientWebapi
+docker-compose up backPatientWebapi
+docker-compose build backPatientNoteHistoryWebapi
+docker-compose up backPatientNoteHistoryWebapi
+docker-compose build ocelotWebapi
+docker-compose up ocelotWebapi
+docker-compose build frontPatientWebApp
+docker-compose up frontPatientWebApp
+
+```
