@@ -1,9 +1,6 @@
 using BackPatient.RiskAnticipation.WebApi.Handlers;
-using BackPatient.RiskAnticipation.WebApi.Services;
 using BackPatient.RiskAnticipation.WebApi.Services.Implementations;
 using BackPatient.RiskAnticipation.WebApi.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,19 +23,6 @@ builder.Services.AddHttpClient(builder.Configuration["MyHttpClients:GatewayClien
         };
     }).AddHttpMessageHandler<AuthTokenHandler>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration["JWT:Authority"];
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JWT:Audience"]
-        };
-    });
-
-builder.Services.AddAuthorization();
 builder.Services.AddScoped<IRiskAnticipationServices, RiskAnticipationServices>();
 
 var app = builder.Build();

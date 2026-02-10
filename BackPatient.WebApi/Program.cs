@@ -52,19 +52,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<BackPatientDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration["JWT:Authority"];
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JWT:Audience"]
-        };
-    });
-
-builder.Services.AddAuthorization();
 
 builder.Services.AddLogging();
 builder.Services.AddScoped<IGenreServices, GenreServices>();
@@ -84,13 +71,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-await PatientSeeder.SeedPatientsAsync(app, app.Environment.IsDevelopment());
+await PatientSeeder.SeedPatientsAsync(app);
 
 app.UseCors();
 app.UseHttpsRedirection();
-app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

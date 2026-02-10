@@ -7,7 +7,7 @@ namespace BackPatient.WebApi.Datas.Seeders;
 
 public static class PatientSeeder
 {
-    public static async Task SeedPatientsAsync(IApplicationBuilder app, bool isDevelopment)
+    public static async Task SeedPatientsAsync(IApplicationBuilder app)
     {
         try
         {
