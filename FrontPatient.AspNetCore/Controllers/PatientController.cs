@@ -30,8 +30,15 @@ public class PatientController(
         
         if (seederSettings.Value.SeedPatientNotes)
         {
-            var dictionary = patients.ToDictionary(k => k.LastName, v => v.Id);
-            await patientNoteSeedServices.SeedNotesAsync(dictionary);
+            try
+            {
+                var dictionary = patients.ToDictionary(k => k.LastName, v => v.Id);
+                await patientNoteSeedServices.SeedNotesAsync(dictionary);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e,"Une erreur est survenue lors de la mise en base des notes des patients.");
+            }
         }
         
         return View(patients);
